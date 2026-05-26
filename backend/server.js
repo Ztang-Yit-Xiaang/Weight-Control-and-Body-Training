@@ -1,4 +1,14 @@
+const health = require("./api/health");
+const parseActivity = require("./api/parse-activity");
+const analyzePhoto = require("./api/analyze-photo");
+
 module.exports = function handler(req, res) {
+  const path = (req.url || "").split("?")[0];
+
+  if (path === "/api/health") return health(req, res);
+  if (path === "/api/parse-activity") return parseActivity(req, res);
+  if (path === "/api/analyze-photo") return analyzePhoto(req, res);
+
   res.statusCode = 200;
   res.setHeader("Content-Type", "text/html; charset=utf-8");
   res.end(`<!doctype html>
