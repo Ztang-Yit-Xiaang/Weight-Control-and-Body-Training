@@ -1,4 +1,6 @@
 {
+  "buildCommand": "npm run check:api",
+  "outputDirectory": "public",
   "functions": {
     "api/*.js": {
       "maxDuration": 30

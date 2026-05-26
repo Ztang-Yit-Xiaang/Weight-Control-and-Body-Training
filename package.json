@@ -9,6 +9,7 @@
     "ios": "expo start --ios",
     "android": "expo start --android",
     "web": "expo start --web",
+    "build": "npm run check:api",
     "check:api": "node --check api/_openai.js && node --check api/parse-activity.js && node --check api/analyze-photo.js && node --check api/health.js",
     "check:expo": "expo install --check"
   },
