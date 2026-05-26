@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Vital Lens</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Main navigation">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">VL</div>
+          <div>
+            <p class="eyebrow">AI wellness tracker</p>
+            <h1>Vital Lens</h1>
+          </div>
+        </div>
+
+        <nav class="nav-list">
+          <a href="#today" class="nav-item active"><span aria-hidden="true">⌁</span> Today</a>
+          <a href="#exercise" class="nav-item"><span aria-hidden="true">◒</span> Exercise</a>
+          <a href="#diet" class="nav-item"><span aria-hidden="true">◇</span> Diet</a>
+          <a href="#sleep" class="nav-item"><span aria-hidden="true">☾</span> Sleep</a>
+          <a href="#kitchen" class="nav-item"><span aria-hidden="true">✦</span> Kitchen</a>
+        </nav>
+
+        <section class="coach-panel" aria-label="Coach insight">
+          <p class="eyebrow">Coach signal</p>
+          <h2>Protein is behind pace</h2>
+          <p>Add one lean protein meal after training. Your sleep window supports a moderate intensity session today.</p>
+        </section>
+      </aside>
+
+      <main>
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Monday, May 25</p>
+            <h2>Your body log, captured by camera first.</h2>
+          </div>
+          <button class="primary-action" id="quickReviewBtn" type="button">Run daily review</button>
+        </header>
+
+        <section class="summary-grid" id="today" aria-label="Today summary">
+          <article class="metric-card">
+            <span class="metric-label">Move load</span>
+            <strong id="moveLoad">68%</strong>
+            <div class="meter"><span style="width: 68%"></span></div>
+            <p>Cardio 38 min · Anaerobic 22 min</p>
+          </article>
+          <article class="metric-card">
+            <span class="metric-label">Nutrition confidence</span>
+            <strong id="nutritionScore">82%</strong>
+            <div class="meter green"><span style="width: 82%"></span></div>
+            <p>Photo meals reviewed · 1 manual edit</p>
+          </article>
+          <article class="metric-card">
+            <span class="metric-label">Sleep rhythm</span>
+            <strong id="sleepScore">7h 25m</strong>
+            <div class="meter blue"><span style="width: 74%"></span></div>
+            <p>23:35 to 07:00 · stable bedtime</p>
+          </article>
+        </section>
+
+        <section class="workbench">
+          <div class="tracker-column">
+            <section class="tool-section" id="exercise">
+              <div class="section-heading">
+                <div>
+                  <p class="eyebrow">Training recognition</p>
+                  <h2>Log cardio or anaerobic exercise</h2>
+                </div>
+                <div class="segmented" role="group" aria-label="Exercise type">
+                  <button type="button" class="segment active" data-exercise-type="Cardio">Cardio</button>
+                  <button type="button" class="segment" data-exercise-type="Anaerobic">Anaerobic</button>
+                </div>
+              </div>
+
+              <div class="input-grid">
+                <label class="photo-drop">
+                  <input id="exercisePhoto" type="file" accept="image/*">
+                  <span class="photo-symbol" aria-hidden="true">▧</span>
+                  <span>Take or upload exercise photo</span>
+                </label>
+                <form class="manual-form" id="exerciseForm">
+                  <label>
+                    Duration
+                    <input name="duration" type="number" min="1" placeholder="45">
+                  </label>
+                  <label>
+                    Intensity
+                    <select name="intensity">
+                      <option>Moderate</option>
+                      <option>Light</option>
+                      <option>Hard</option>
+                    </select>
+                  </label>
+                  <button type="submit">Add session</button>
+                </form>
+              </div>
+              <div class="ai-result" id="exerciseResult">
+                Upload a treadmill, cycling, gym, dumbbell, or bodyweight photo and AI recognition will draft the log.
+              </div>
+            </section>
+
+            <section class="tool-section" id="diet">
+              <div class="section-heading">
+                <div>
+                  <p class="eyebrow">Photo meal journal</p>
+                  <h2>Capture food without typing every ingredient</h2>
+                </div>
+                <span class="status-pill">AI estimate editable</span>
+              </div>
+              <div class="input-grid">
+                <label class="photo-drop food">
+                  <input id="mealPhoto" type="file" accept="image/*">
+                  <span class="photo-symbol" aria-hidden="true">▣</span>
+                  <span>Take or upload meal photo</span>
+                </label>
+                <form class="manual-form" id="mealForm">
+                  <label>
+                    Meal note
+                    <input name="note" type="text" placeholder="chicken rice bowl">
+                  </label>
+                  <label>
+                    Portion
+                    <select name="portion">
+                      <option>Normal</option>
+                      <option>Small</option>
+                      <option>Large</option>
+                    </select>
+                  </label>
+                  <button type="submit">Save meal</button>
+                </form>
+              </div>
+              <div class="ai-result" id="mealResult">
+                Upload a food photo and the app will estimate foods, calories, protein, carbs, fat, and uncertainty.
+              </div>
+            </section>
+
+            <section class="tool-section" id="sleep">
+              <div class="section-heading">
+                <div>
+                  <p class="eyebrow">Recovery rhythm</p>
+                  <h2>Track sleeping timing</h2>
+                </div>
+                <span class="status-pill calm">Bedtime target 23:30</span>
+              </div>
+              <form class="sleep-form" id="sleepForm">
+                <label>
+                  Sleep time
+                  <input name="sleepAt" type="time" value="23:35">
+                </label>
+                <label>
+                  Wake time
+                  <input name="wakeAt" type="time" value="07:00">
+                </label>
+                <label>
+                  Sleep quality
+                  <input name="quality" type="range" min="1" max="10" value="8">
+                </label>
+                <button type="submit">Update sleep</button>
+              </form>
+              <div class="sleep-timeline" aria-label="Sleep timeline">
+                <span style="left: 16%; width: 62%"></span>
+              </div>
+              <p class="quiet" id="sleepResult">A consistent sleep window improves appetite control and strength recovery.</p>
+            </section>
+          </div>
+
+          <aside class="insight-column">
+            <section class="tool-section kitchen-card" id="kitchen">
+              <div class="section-heading">
+                <div>
+                  <p class="eyebrow">Kitchen scanner</p>
+                  <h2>Turn ingredients into meals</h2>
+                </div>
+              </div>
+              <label class="photo-drop pantry">
+                <input id="ingredientPhoto" type="file" accept="image/*">
+                <span class="photo-symbol" aria-hidden="true">◫</span>
+                <span>Take a kitchen ingredient photo</span>
+              </label>
+              <form id="ingredientForm" class="ingredient-form">
+                <label>
+                  Ingredients seen
+                  <textarea name="ingredients" rows="4" placeholder="eggs, spinach, salmon, rice, Greek yogurt"></textarea>
+                </label>
+                <button type="submit">Suggest meals</button>
+              </form>
+              <div class="meal-suggestions" id="mealSuggestions">
+                <article>
+                  <strong>Salmon rice bowl</strong>
+                  <span>High protein · 25 min · good after anaerobic training</span>
+                </article>
+                <article>
+                  <strong>Spinach egg wrap</strong>
+                  <span>Quick breakfast · steady energy · low prep</span>
+                </article>
+              </div>
+            </section>
+
+            <section class="tool-section">
+              <p class="eyebrow">Recent logs</p>
+              <div class="log-list" id="logList" aria-live="polite">
+                <article>
+                  <span>07:00</span>
+                  <strong>Wake recorded</strong>
+                  <p>7h 25m sleep, quality 8/10</p>
+                </article>
+                <article>
+                  <span>12:20</span>
+                  <strong>Meal photo analyzed</strong>
+                  <p>Rice bowl · 610 kcal · 39g protein</p>
+                </article>
+                <article>
+                  <span>18:10</span>
+                  <strong>Workout recognized</strong>
+                  <p>Strength circuit · 22 min · hard</p>
+                </article>
+              </div>
+            </section>
+          </aside>
+        </section>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "Vital Lens",
+    "slug": "vital-lens",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.vitallens.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Vital Lens uses the camera to log workouts, meals, kitchen ingredients, and optional body progress photos.",
+        "NSPhotoLibraryUsageDescription": "Vital Lens lets you choose photos for AI-assisted wellness logging.",
+        "NSCalendarsUsageDescription": "Vital Lens can add wellness events to your calendar when you request it.",
+        "NSCalendarsFullAccessUsageDescription": "Vital Lens needs calendar access only to add wellness events that you request.",
+        "NSCalendarsWriteOnlyAccessUsageDescription": "Vital Lens can add wellness events to your calendar when you request it."
+      }
+    },
+    "plugins": [
+      [
+        "expo-calendar",
+        {
+          "calendarPermission": "Vital Lens can add wellness events to your calendar when you request it."
+        }
+      ],
+      "expo-notifications",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Vital Lens lets you choose photos for AI-assisted wellness logging.",
+          "cameraPermission": "Vital Lens uses the camera to log workouts, meals, kitchen ingredients, and optional body progress photos."
+        }
+      ]
+    ]
+  }
+}

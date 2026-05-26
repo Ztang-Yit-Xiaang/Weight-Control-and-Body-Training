@@ -1,0 +1,33 @@
+name: Check
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install
+        run: npm ci --legacy-peer-deps
+
+      - name: Check backend syntax
+        run: |
+          node --check api/_openai.js
+          node --check api/parse-activity.js
+          node --check api/analyze-photo.js
+          node --check api/health.js
+
+      - name: Check Expo dependencies
+        run: npx expo install --check
