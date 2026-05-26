@@ -2,8 +2,24 @@ const health = require("./api/health");
 const parseActivity = require("./api/parse-activity");
 const analyzePhoto = require("./api/analyze-photo");
 
+function patchResponse(res) {
+  if (!res.status) {
+    res.status = function status(code) {
+      res.statusCode = code;
+      return res;
+    };
+  }
+  if (!res.json) {
+    res.json = function json(body) {
+      res.setHeader("Content-Type", "application/json; charset=utf-8");
+      res.end(JSON.stringify(body));
+    };
+  }
+}
+
 module.exports = function handler(req, res) {
   const path = (req.url || "").split("?")[0];
+  patchResponse(res);
 
   if (path === "/api/health") return health(req, res);
   if (path === "/api/parse-activity") return parseActivity(req, res);
