@@ -56,19 +56,19 @@ npm run start:tunnel
 
 Note: this project targets Expo SDK 54 for compatibility with the current iOS App Store version of Expo Go.
 
-Expo Go is for development and depends on a running Metro server. To log from your phone away from the Mac, deploy the backend to Vercel from GitHub and create an installable iPhone build with EAS. See [Cloud Deployment](docs/cloud-deployment.md).
+Expo Go is for development and depends on a running Metro server. To log from your phone away from the Mac, deploy the `backend` folder to Vercel from GitHub and create an installable iPhone build with EAS. See [Cloud Deployment](docs/cloud-deployment.md).
 
 ## Implementation Notes
 
 - V1 stores all logs locally on-device with AsyncStorage.
-- AI calls are routed through Vercel serverless functions in `api/`; the Expo app never stores `OPENAI_API_KEY`.
+- AI calls are routed through Vercel serverless functions in `backend/api/`; the Expo app never stores `OPENAI_API_KEY`.
 - Apple Calendar events require calendar permission.
 - Google Calendar v1 opens a prefilled event URL instead of using full Google OAuth.
 - Notification times use 24-hour `HH:MM` input. Defaults are `08:00` and `20:30`.
 
 ## OpenAI Backend
 
-Deploy this repo to Vercel and set these environment variables:
+Deploy this repo to Vercel with the project root directory set to `backend`, then set these environment variables:
 
 ```bash
 OPENAI_API_KEY=your_api_key

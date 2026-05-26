@@ -18,7 +18,7 @@ git push -u origin main
 
 1. Open Vercel and choose `Add New Project`.
 2. Import the GitHub repository.
-3. Keep the root directory as the repository root.
+3. Set the root directory to `backend`.
 4. Add environment variables:
 
 ```text
@@ -45,6 +45,8 @@ Expected response:
 ```
 
 Vercel's GitHub integration automatically deploys branch pushes and pull requests after the repository is imported.
+
+The Vercel root must be `backend` because the repository root is the Expo iPhone app. This keeps Vercel from trying to parse React Native files such as `src/App.js`.
 
 ## 3. Point The iPhone App At The Cloud Backend
 
