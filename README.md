@@ -72,7 +72,7 @@ Deploy this repo to Vercel and set these environment variables:
 
 ```bash
 OPENAI_API_KEY=your_api_key
-OPENAI_MODEL=gpt-4o
+OPENAI_MODEL=gpt-5.4-mini
 ```
 
 The app calls:

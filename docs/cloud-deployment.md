@@ -23,7 +23,7 @@ git push -u origin main
 
 ```text
 OPENAI_API_KEY=your_openai_api_key
-OPENAI_MODEL=gpt-4o
+OPENAI_MODEL=gpt-5.4-mini
 ```
 
 5. Deploy.
@@ -40,7 +40,7 @@ Expected response:
   "ok": true,
   "service": "vital-lens-ai",
   "openaiConfigured": true,
-  "model": "gpt-4o"
+  "model": "gpt-5.4-mini"
 }
 ```
 

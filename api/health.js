@@ -8,6 +8,6 @@ module.exports = async function handler(req, res) {
     ok: true,
     service: "vital-lens-ai",
     openaiConfigured: Boolean(process.env.OPENAI_API_KEY),
-    model: process.env.OPENAI_MODEL || "gpt-4o"
+    model: process.env.OPENAI_MODEL || "gpt-5.4-mini"
   });
 };
