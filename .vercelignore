@@ -9,3 +9,5 @@ eas.json
 index.html
 index.js
 styles.css
+!backend/
+!backend/**
