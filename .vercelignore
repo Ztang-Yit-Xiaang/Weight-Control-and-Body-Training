@@ -1,0 +1,11 @@
+.expo/
+.github/
+docs/
+src/
+app.json
+app.js
+babel.config.js
+eas.json
+index.html
+index.js
+styles.css
