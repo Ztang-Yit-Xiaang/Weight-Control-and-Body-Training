@@ -9,6 +9,7 @@ import {
   Alert,
   Image,
   Linking,
+  NativeModules,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -34,75 +35,355 @@ const DEFAULT_AI_API_URL = process.env.EXPO_PUBLIC_AI_API_URL || "https://weight
 
 const copy = {
   en: {
+    addBodyPhotoFirst: "Add height, weight, age, sex, and a progress photo before estimating 體脂率.",
     aiUrl: "AI API URL",
+    aiBackend: "AI backend",
+    aiConnected: "Connected",
+    aiNeedsUrl: "Needs AI API URL",
+    aiStatusHelp: "Open Vital Lens Settings and add your Vercel backend URL.",
+    aiTest: "AI Test",
+    aiTestBodyContext: "Body test uses your current height, weight, age, sex, and a new photo.",
+    aiTestExercisePhoto: "Test exercise photo",
+    aiTestIngredientsPhoto: "Test ingredients photo",
+    aiTestMealPhoto: "Test meal photo",
+    aiTestBodyPhoto: "Test body photo",
+    aiTestIntro: "Use these buttons to verify the cloud AI before logging real data.",
+    aiTestResult: "AI test result",
+    aiTestTextExamples: "Text parsing examples",
+    aiTextResultPrefix: "Text",
+    aiFallbackTitle: "AI fallback",
+    aiPhotoFallbackTitle: "AI photo fallback",
+    analyzing: "Analyzing...",
     activity: "Activity",
     activityCenter: "Activity Center",
     activityName: "Activity name",
+    activityLogged: "Activity saved",
+    activityParsed: "Activity parsed by AI",
+    activitySavedDetail: "{{name}} · {{minutes}} min · {{intensity}}",
     addPlan: "Add plan",
+    age: "Age",
     aiDraft: "AI draft",
     analyzeBody: "Analyze body photo",
     analyzeIngredients: "Analyze ingredients",
     analyzeMeal: "Analyze meal photo",
     analyzeWorkout: "Analyze workout photo",
     body: "Body",
+    bodyEstimateCreated: "體脂率 estimate created",
+    bodyEstimateHelp: "Add height, weight, age, sex, and a photo to generate an educational range.",
+    bodyEstimateTitle: "Estimate 體脂率 from progress context",
+    bodyPhotoButton: "Take body progress photo",
     calendar: "Calendar",
+    calendarEventAdded: "Calendar event added",
+    calendarEventAddedBody: "Added {{kind}} event to Apple Calendar.",
+    calendarPermissionBody: "Vital Lens can only add Apple Calendar events after permission is granted.",
+    calendarPermissionTitle: "Calendar permission needed",
+    calendarAndNotifications: "Notifications and calendar",
     checkList: "Today Checklist",
+    cardio: "Cardio",
     complete: "Complete",
+    completed: "Completed",
     confidence: "Confidence",
+    connectedHint: "Vercel backend is ready for text parsing and photo AI.",
+    dailyReview: "Run daily review",
+    dailyReviewComplete: "Daily review complete",
+    dailyReviewDetail: "Plan training, add 25-35g protein, and protect tonight's sleep target.",
+    dailyRhythm: "Daily rhythm",
+    detectedIngredients: "Detected ingredients",
     diet: "Diet",
     distance: "Distance",
     duration: "Duration min",
+    educationalBodyEstimate: "Educational body estimate",
+    educationalBodyNote: "This is an educational range, not a medical measurement. Use consistent lighting, posture, and distance for progress tracking.",
+    educationalFallback: "educational fallback",
     english: "English",
+    exercise: "exercise",
+    female: "Female",
+    expoSettingsNote: "Expo Go Settings controls Expo Go. Vital Lens Settings below controls language and AI.",
+    fallbackManualDraft: "A local draft was created so you can still edit and save.",
+    foodPhotoHelp: "Take a food photo and AI estimates food, calories, protein, carbs, fat, and uncertainty.",
     freeText: "Free text in any language",
+    genericMeal: "Meal",
+    googleCalendarOpened: "Google Calendar opened",
+    googleCalendar: "Google Calendar",
+    heightCm: "Height cm",
     history: "History",
     home: "Home",
+    holdSec: "Hold sec",
     intensity: "Intensity",
+    ingredientsSeen: "Ingredients seen",
+    ingredients: "ingredients",
+    kg: "kg",
+    kcal: "kcal",
     kitchen: "Kitchen",
+    kitchenIngredientsAnalyzed: "Kitchen ingredients analyzed",
+    kitchenScanner: "Kitchen scanner",
     language: "Language",
+    latestEstimate: "Estimated range: {{range}}. Confidence: {{confidence}}. {{notes}}",
+    localFallback: "local fallback",
+    macAwayInstall: "For use away from your Mac, install an EAS internal iOS build. Expo Go Settings is separate from this Vital Lens Settings screen.",
+    male: "Male",
+    manual: "manual",
+    manualChecklist: "manual checklist",
+    manualFallback: "manual fallback",
     manualForm: "Manual sport form",
+    mealAddedManually: "Meal added manually",
+    meal: "meal prep",
+    mealNote: "Meal note",
+    mealPhotoAnalyzed: "Meal photo analyzed",
+    mealSuggestionsGenerated: "Meal suggestions generated",
+    missingFields: "Missing fields",
+    moreInfoNeeded: "More information needed",
+    moveLoad: "Move load",
+    minuteShort: "min",
+    morningPlan: "Morning plan",
+    nightReview: "Night review",
+    noActivity: "No completed activities yet.",
+    noCalendarBody: "No writable Apple Calendar was available on this device.",
+    noCalendarTitle: "No calendar found",
     notes: "Notes",
+    notificationDisabledBody: "Vital Lens cannot schedule reminders without notification permission.",
+    notificationDisabledTitle: "Notifications disabled",
+    cameraPermissionTitle: "Camera permission needed",
+    cameraPermissionBody: "You can still use manual logging, but camera capture needs permission.",
+    nutrition: "Nutrition",
+    openSettingsForUrl: "Open Vital Lens Settings and add your Vercel backend URL.",
+    openaiKeyNote: "Keep OPENAI_API_KEY in Vercel only. The iPhone app calls your cloud backend and never stores the API key.",
     parseWithAI: "Parse with AI",
+    parsing: "Parsing...",
     photoAI: "Photo AI",
+    photoMealJournal: "Photo meal journal",
+    photoSavedManual: "The photo was kept and you can still save manually.",
+    photoAiSource: "photo AI",
+    planAdded: "Plan added",
+    plans: "Plans",
+    protein: "protein",
+    proteinGrainBowl: "Protein grain bowl",
+    recentLogs: "Recent logs",
+    recoveryRhythm: "Recovery rhythm",
+    recoverySnack: "Recovery snack",
+    reps: "Reps",
+    reviewMealsTrainingSleep: "Review meals, training, and sleep target.",
     saveActivity: "Save activity",
+    saveMeal: "Save meal",
+    schedule: "Schedule",
     settings: "Settings",
+    settingsEyebrow: "AI and language",
+    sex: "Sex",
+    sets: "Sets",
+    simpleRecoverySnack: "Simple recovery snack",
     sleep: "Sleep",
+    sleepQuality: "Sleep quality 1-10",
+    sleepRhythm: "Sleep rhythm",
+    sleepTarget: "Sleep target",
+    sleepTime: "Sleep time",
+    sleepTimingUpdated: "Sleep timing updated",
+    sport: "Sport",
+    strength: "Strength",
+    statusNotYet: "Not yet",
+    suggestMeals: "Suggest meals",
+    suggestionDetail: "High-protein option · works with today's training load.",
+    takeBodyPhoto: "Take body progress photo",
+    time: "Time",
+    timeInputHelp: "Use HH:MM, 24-hour time.",
+    todayChecklistReady: "Activity checklist ready",
+    todayChecklistReadyDetail: "Running and plank are planned for today",
     today: "Today",
+    trackSleep: "Track sleeping timing",
+    turnIngredientsIntoMeals: "Turn ingredients into meals",
+    unit: "Unit",
+    updateSleep: "Update sleep",
+    vegetableOmelet: "Vegetable omelet",
+    wakeTime: "Wake time",
+    weight: "Weight",
+    weightKg: "Weight kg",
+    appleCalendar: "Apple Calendar",
+    workout: "workout",
+    core: "Core",
+    daily: "Daily",
+    hard: "Hard",
+    legacy: "Legacy",
+    legacyManual: "legacy manual",
+    legacyPhoto: "legacy photo",
+    light: "Light",
+    mobility: "Mobility",
+    moderate: "Moderate",
+    recovery: "Recovery",
     traditionalChinese: "繁體中文"
   },
   zh: {
+    addBodyPhotoFirst: "請先加入身高、體重、年齡、性別與進度照片，再估算體脂率。",
     aiUrl: "AI API 網址",
+    aiBackend: "AI 後端",
+    aiConnected: "已連線",
+    aiNeedsUrl: "需要 AI API 網址",
+    aiStatusHelp: "請在 Vital Lens 設定中加入 Vercel 後端網址。",
+    aiTest: "AI 測試",
+    aiTestBodyContext: "身體測試會使用目前的身高、體重、年齡、性別與一張新照片。",
+    aiTestExercisePhoto: "測試運動照片",
+    aiTestIngredientsPhoto: "測試食材照片",
+    aiTestMealPhoto: "測試餐點照片",
+    aiTestBodyPhoto: "測試身體照片",
+    aiTestIntro: "用這些按鈕先確認雲端 AI 是否正常，再開始正式記錄。",
+    aiTestResult: "AI 測試結果",
+    aiTestTextExamples: "文字解析範例",
+    aiTextResultPrefix: "文字",
+    aiFallbackTitle: "AI 備援",
+    aiPhotoFallbackTitle: "照片 AI 備援",
+    analyzing: "分析中...",
     activity: "活動",
     activityCenter: "活動中心",
     activityName: "活動名稱",
+    activityLogged: "活動已儲存",
+    activityParsed: "AI 已解析活動",
+    activitySavedDetail: "{{name}} · {{minutes}} 分鐘 · {{intensity}}",
     addPlan: "加入計畫",
+    age: "年齡",
     aiDraft: "AI 草稿",
     analyzeBody: "分析身體照片",
     analyzeIngredients: "分析食材",
     analyzeMeal: "分析餐點照片",
     analyzeWorkout: "分析運動照片",
     body: "身體",
+    bodyEstimateCreated: "體脂率估算已建立",
+    bodyEstimateHelp: "加入身高、體重、年齡、性別與照片後，產生教育用途的區間估算。",
+    bodyEstimateTitle: "依進度資料估算體脂率",
+    bodyPhotoButton: "拍攝身體進度照片",
     calendar: "行事曆",
+    calendarEventAdded: "行事曆事件已新增",
+    calendarEventAddedBody: "已新增 {{kind}} 事件到 Apple 行事曆。",
+    calendarPermissionBody: "需要授權後，Vital Lens 才能新增 Apple 行事曆事件。",
+    calendarPermissionTitle: "需要行事曆權限",
+    calendarAndNotifications: "通知與行事曆",
     checkList: "今日清單",
+    cardio: "有氧",
     complete: "完成",
+    completed: "已完成",
     confidence: "信心度",
+    connectedHint: "Vercel 後端已可用於文字解析與照片 AI。",
+    dailyReview: "執行每日回顧",
+    dailyReviewComplete: "每日回顧完成",
+    dailyReviewDetail: "規劃訓練、補充 25-35g 蛋白質，並保護今晚睡眠目標。",
+    dailyRhythm: "每日節奏",
+    detectedIngredients: "偵測到的食材",
     diet: "飲食",
     distance: "距離",
     duration: "時間 分鐘",
+    educationalBodyEstimate: "教育用途體脂估算",
+    educationalBodyNote: "這是教育用途的區間估算，不是醫療測量。請用一致的光線、姿勢與距離追蹤進度。",
+    educationalFallback: "教育用途備援",
     english: "English",
+    exercise: "運動",
+    female: "女性",
+    expoSettingsNote: "Expo Go 的設定只控制 Expo Go。下方 Vital Lens 設定才控制語言與 AI。",
+    fallbackManualDraft: "已建立本機草稿，你仍然可以編輯並儲存。",
+    foodPhotoHelp: "拍攝餐點照片後，AI 會估算食物、熱量、蛋白質、碳水、脂肪與不確定性。",
     freeText: "任何語言自由輸入",
+    genericMeal: "餐點",
+    googleCalendarOpened: "已開啟 Google 行事曆",
+    googleCalendar: "Google 行事曆",
+    heightCm: "身高 cm",
     history: "歷史紀錄",
     home: "首頁",
+    holdSec: "維持秒數",
     intensity: "強度",
+    ingredientsSeen: "看到的食材",
+    ingredients: "食材",
+    kg: "kg",
+    kcal: "大卡",
     kitchen: "廚房",
+    kitchenIngredientsAnalyzed: "廚房食材已分析",
+    kitchenScanner: "廚房掃描",
     language: "語言",
+    latestEstimate: "估算區間：{{range}}。信心度：{{confidence}}。{{notes}}",
+    localFallback: "本機備援",
+    macAwayInstall: "若要離開 Mac 使用，請安裝 EAS 內部 iOS 版本。Expo Go 設定與這個 Vital Lens 設定頁面是分開的。",
+    male: "男性",
+    manual: "手動",
+    manualChecklist: "手動清單",
+    manualFallback: "手動備援",
     manualForm: "手動專項表單",
+    mealAddedManually: "已手動新增餐點",
+    meal: "備餐",
+    mealNote: "餐點備註",
+    mealPhotoAnalyzed: "餐點照片已分析",
+    mealSuggestionsGenerated: "餐點建議已產生",
+    missingFields: "缺少欄位",
+    moreInfoNeeded: "需要更多資訊",
+    moveLoad: "活動量",
+    minuteShort: "分鐘",
+    morningPlan: "早晨計畫",
+    nightReview: "夜間回顧",
+    noActivity: "目前沒有已完成活動。",
+    noCalendarBody: "此裝置沒有可寫入的 Apple 行事曆。",
+    noCalendarTitle: "找不到行事曆",
     notes: "備註",
+    notificationDisabledBody: "沒有通知權限時，Vital Lens 無法安排提醒。",
+    notificationDisabledTitle: "通知已停用",
+    cameraPermissionTitle: "需要相機權限",
+    cameraPermissionBody: "你仍然可以手動記錄，但拍照需要相機權限。",
+    nutrition: "營養",
+    openSettingsForUrl: "請開啟 Vital Lens 設定並加入 Vercel 後端網址。",
+    openaiKeyNote: "OPENAI_API_KEY 只放在 Vercel。iPhone App 只呼叫雲端後端，不會儲存 API key。",
     parseWithAI: "用 AI 解析",
+    parsing: "解析中...",
     photoAI: "照片 AI",
+    photoMealJournal: "照片飲食日誌",
+    photoSavedManual: "照片已保留，你仍然可以手動儲存。",
+    photoAiSource: "照片 AI",
+    planAdded: "計畫已加入",
+    plans: "計畫",
+    protein: "蛋白質",
+    proteinGrainBowl: "高蛋白穀物碗",
+    recentLogs: "最近紀錄",
+    recoveryRhythm: "恢復節奏",
+    recoverySnack: "恢復點心",
+    reps: "次數",
+    reviewMealsTrainingSleep: "回顧餐點、訓練與睡眠目標。",
     saveActivity: "儲存活動",
+    saveMeal: "儲存餐點",
+    schedule: "安排",
     settings: "設定",
+    settingsEyebrow: "AI 與語言",
+    sex: "性別",
+    sets: "組數",
+    simpleRecoverySnack: "簡單恢復點心",
     sleep: "睡眠",
+    sleepQuality: "睡眠品質 1-10",
+    sleepRhythm: "睡眠節奏",
+    sleepTarget: "睡眠目標",
+    sleepTime: "入睡時間",
+    sleepTimingUpdated: "睡眠時間已更新",
+    sport: "球類與運動",
+    strength: "肌力",
+    statusNotYet: "尚未建立",
+    suggestMeals: "建議餐點",
+    suggestionDetail: "高蛋白選項 · 適合今天的訓練量。",
+    takeBodyPhoto: "拍攝身體進度照片",
+    time: "時間",
+    timeInputHelp: "請使用 24 小時制 HH:MM。",
+    todayChecklistReady: "活動清單已準備",
+    todayChecklistReadyDetail: "今天已規劃跑步與棒式",
     today: "今天",
+    trackSleep: "追蹤睡眠時間",
+    turnIngredientsIntoMeals: "把食材變成餐點",
+    unit: "單位",
+    updateSleep: "更新睡眠",
+    vegetableOmelet: "蔬菜歐姆蛋",
+    wakeTime: "起床時間",
+    weight: "重量",
+    weightKg: "體重 kg",
+    appleCalendar: "Apple 行事曆",
+    workout: "訓練",
+    core: "核心",
+    daily: "日常活動",
+    hard: "高強度",
+    legacy: "舊紀錄",
+    legacyManual: "舊手動紀錄",
+    legacyPhoto: "舊照片紀錄",
+    light: "低強度",
+    mobility: "活動度",
+    moderate: "中等強度",
+    recovery: "恢復",
     traditionalChinese: "繁體中文"
   }
 };
@@ -170,6 +451,20 @@ const activityCatalog = [
   ["commute-walk", "Commute walk", "通勤走路", "daily", "run", false]
 ].map(([id, en, zh, category, formType, photoUseful]) => ({ id, label: { en, zh }, category, formType, photoUseful }));
 
+function detectInitialLocale() {
+  const locale =
+    NativeModules.SettingsManager?.settings?.AppleLocale ||
+    NativeModules.SettingsManager?.settings?.AppleLanguages?.[0] ||
+    Intl.DateTimeFormat().resolvedOptions().locale ||
+    "en";
+  const normalized = String(locale).toLowerCase();
+  return normalized.startsWith("zh") || normalized.includes("tw") || normalized.includes("hk") || normalized.includes("hant") ? "zh" : "en";
+}
+
+function template(text, values = {}) {
+  return String(text || "").replace(/\{\{(\w+)\}\}/g, (_, key) => values[key] ?? "");
+}
+
 const initialState = {
   activityLogs: [],
   workoutLogs: [],
@@ -184,11 +479,11 @@ const initialState = {
   bodyEstimates: [],
   ingredientScans: [],
   recentLogs: [
-    { id: "seed-1", title: "Wake recorded", detail: "7h 25m sleep, quality 8/10", createdAt: new Date().toISOString() },
-    { id: "seed-2", title: "Activity checklist ready", detail: "Running and plank are planned for today", createdAt: new Date().toISOString() }
+    { id: "seed-1", titleKey: "sleepTimingUpdated", detail: "7h 25m sleep, quality 8/10", createdAt: new Date().toISOString() },
+    { id: "seed-2", titleKey: "todayChecklistReady", detailKey: "todayChecklistReadyDetail", createdAt: new Date().toISOString() }
   ],
   settings: {
-    locale: "en",
+    locale: detectInitialLocale(),
     aiApiUrl: DEFAULT_AI_API_URL
   },
   reminderSettings: {
@@ -231,6 +526,30 @@ function normalizeTimeInput(value, fallback) {
 
 function labelFor(item, locale) {
   return item?.label?.[locale] || item?.label?.en || item?.displayName || item?.title || "";
+}
+
+function localizeMeta(value, t) {
+  const key = String(value || "").trim().toLowerCase().replace(/\s+/g, "");
+  const lookup = {
+    "cardio": "cardio",
+    "core": "core",
+    "daily": "daily",
+    "hard": "hard",
+    "legacy": "legacy",
+    "legacymanual": "legacyManual",
+    "legacyphoto": "legacyPhoto",
+    "light": "light",
+    "localfallback": "localFallback",
+    "manual": "manual",
+    "manualfallback": "manualFallback",
+    "moderate": "moderate",
+    "mobility": "mobility",
+    "photoai": "photoAiSource",
+    "recovery": "recovery",
+    "sport": "sport",
+    "strength": "strength"
+  };
+  return lookup[key] ? t(lookup[key]) : value;
 }
 
 function catalogSummary(locale) {
@@ -291,10 +610,10 @@ function estimateBodyFat({ height, weight, age, sex }) {
   return `${low}-${high}%`;
 }
 
-async function requestCameraPhoto() {
+async function requestCameraPhoto(messages = {}) {
   const permission = await ImagePicker.requestCameraPermissionsAsync();
   if (!permission.granted) {
-    Alert.alert("Camera permission needed", "You can still use manual logging, but camera capture needs permission.");
+    Alert.alert(messages.title || "Camera permission needed", messages.body || "You can still use manual logging, but camera capture needs permission.");
     return null;
   }
   const result = await ImagePicker.launchCameraAsync({ allowsEditing: true, aspect: [4, 5], quality: 0.72 });
@@ -309,10 +628,10 @@ async function imageToDataUrl(uri) {
   return `data:${mime};base64,${base64}`;
 }
 
-async function scheduleDailyReminder(time, title, body) {
+async function scheduleDailyReminder(time, title, body, messages = {}) {
   const permission = await Notifications.requestPermissionsAsync();
   if (!permission.granted) {
-    Alert.alert("Notifications disabled", "Vital Lens cannot schedule reminders without notification permission.");
+    Alert.alert(messages.title || "Notifications disabled", messages.body || "Vital Lens cannot schedule reminders without notification permission.");
     return null;
   }
   const { hour, minute } = splitTime(time);
@@ -343,9 +662,11 @@ export default function App() {
   const [ingredients, setIngredients] = useState("eggs, spinach, salmon, rice, Greek yogurt");
   const [bodyForm, setBodyForm] = useState({ height: "", weight: "", age: "", sex: "Male", photoUri: null });
   const [bodyDraft, setBodyDraft] = useState(null);
+  const [aiTestResult, setAiTestResult] = useState("");
 
   const locale = data.settings?.locale || "en";
   const t = (key) => copy[locale]?.[key] || copy.en[key] || key;
+  const tt = (key, values) => template(t(key), values);
   const apiBase = normalizeApiUrl(data.settings?.aiApiUrl);
 
   useEffect(() => {
@@ -382,7 +703,7 @@ export default function App() {
     intensity: log.intensity,
     metrics: {},
     notes: log.aiDraft,
-    source: log.photoUri ? "legacy photo" : "legacy manual",
+      source: log.photoUri ? "legacy photo" : "legacy manual",
     photoUri: log.photoUri,
     completedAt: log.createdAt,
     createdAt: log.createdAt
@@ -394,17 +715,30 @@ export default function App() {
     return {
       moveLoad: Math.min(100, Math.round((minutes / 70) * 100)) || 0,
       nutrition: Math.min(100, 55 + data.mealLogs.length * 9 + Math.round(protein / 12)),
-      sleep: latestSleep ? `${latestSleep.sleepAt} to ${latestSleep.wakeAt}` : "Not logged"
+      sleep: latestSleep ? `${latestSleep.sleepAt} - ${latestSleep.wakeAt}` : t("statusNotYet")
     };
-  }, [allActivityLogs, data.mealLogs, latestSleep]);
+  }, [allActivityLogs, data.mealLogs, latestSleep, locale]);
 
   function addRecentLog(title, detail) {
     const log = { id: makeId("recent"), title, detail, createdAt: new Date().toISOString() };
     setData((current) => ({ ...current, recentLogs: [log, ...(current.recentLogs || [])].slice(0, 14) }));
   }
 
+  function cameraMessages() {
+    return { title: t("cameraPermissionTitle"), body: t("cameraPermissionBody") };
+  }
+
+  function mealIdeas() {
+    return [t("proteinGrainBowl"), t("vegetableOmelet"), t("simpleRecoverySnack")];
+  }
+
+  function setReadableAiTestResult(label, payload) {
+    const pretty = typeof payload === "string" ? payload : JSON.stringify(payload, null, 2);
+    setAiTestResult(`${label}\n${pretty}`);
+  }
+
   async function postAI(path, payload) {
-    if (!apiBase) throw new Error("AI API URL is not configured.");
+    if (!apiBase) throw new Error(t("aiNeedsUrl"));
     const response = await fetch(`${apiBase}${path}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -422,12 +756,12 @@ export default function App() {
       const nextDraft = { ...localParseActivity(freeText, locale), ...result.activity };
       setDraft(nextDraft);
       setManual(nextDraft);
-      addRecentLog("Activity parsed by AI", `${nextDraft.displayName || nextDraft.activityName} · ${nextDraft.confidence || "AI"}`);
+      addRecentLog(t("activityParsed"), `${nextDraft.displayName || nextDraft.activityName} · ${nextDraft.confidence || "AI"}`);
     } catch (error) {
       const fallback = localParseActivity(freeText, locale);
       setDraft(fallback);
       setManual(fallback);
-      Alert.alert("AI fallback", `${error.message}\n\nA local draft was created so you can still edit and save.`);
+      Alert.alert(t("aiFallbackTitle"), `${error.message}\n\n${t("fallbackManualDraft")}`);
     } finally {
       setBusy("");
     }
@@ -467,7 +801,7 @@ export default function App() {
   function saveActivityDraft(input, source = "manual") {
     const log = buildActivityLog(input, source);
     setData((current) => ({ ...current, activityLogs: [log, ...(current.activityLogs || [])] }));
-    addRecentLog("Activity saved", `${log.displayName} · ${log.durationMinutes || "?"} min · ${log.intensity}`);
+    addRecentLog(t("activityLogged"), tt("activitySavedDetail", { name: log.displayName, minutes: log.durationMinutes || "?", intensity: log.intensity }));
     return log;
   }
 
@@ -485,8 +819,8 @@ export default function App() {
       durationMinutes: "30",
       metrics: {},
       intensity: "Moderate",
-      notes: `Completed from checklist at ${plan.scheduledTime}`,
-      confidence: "manual checklist"
+      notes: `${t("completed")} · ${plan.scheduledTime}`,
+      confidence: t("manualChecklist")
     };
     setManual(nextManual);
     saveActivityDraft(nextManual, "checklist");
@@ -504,7 +838,7 @@ export default function App() {
       createdAt: new Date().toISOString()
     };
     setData((current) => ({ ...current, plannedActivities: [plan, ...(current.plannedActivities || [])] }));
-    addRecentLog("Plan added", `${plan.title} · ${plan.scheduledTime}`);
+    addRecentLog(t("planAdded"), `${plan.title} · ${plan.scheduledTime}`);
   }
 
   function togglePlan(planId) {
@@ -521,7 +855,7 @@ export default function App() {
       const result = await postAI("/api/analyze-photo", { mode, imageDataUrl, locale, context });
       return result.analysis;
     } catch (error) {
-      Alert.alert("AI photo fallback", `${error.message}\n\nThe photo was kept and you can still save manually.`);
+      Alert.alert(t("aiPhotoFallbackTitle"), `${error.message}\n\n${t("photoSavedManual")}`);
       return null;
     } finally {
       setBusy("");
@@ -529,63 +863,63 @@ export default function App() {
   }
 
   async function captureWorkoutPhoto() {
-    const uri = await requestCameraPhoto();
+    const uri = await requestCameraPhoto(cameraMessages());
     if (!uri) return;
     const analysis = await analyzePhoto("exercise", uri, { activityCatalogSummary: catalogSummary(locale) });
     const parsed = analysis?.activity || localParseActivity("cardio 30 minutes", locale);
-    const nextManual = { ...parsed, photoUri: uri, confidence: analysis?.confidence || parsed.confidence || "manual fallback" };
+    const nextManual = { ...parsed, photoUri: uri, confidence: analysis?.confidence || parsed.confidence || t("manualFallback") };
     setManual(nextManual);
     setDraft(nextManual);
     saveActivityDraft(nextManual, "photo AI");
   }
 
   async function captureMealPhoto() {
-    const uri = await requestCameraPhoto();
+    const uri = await requestCameraPhoto(cameraMessages());
     if (!uri) return;
     const analysis = await analyzePhoto("meal", uri);
     const log = {
       id: makeId("meal"),
       photoUri: uri,
-      foods: analysis?.foods || [mealNote || "meal photo"],
+      foods: analysis?.foods || [mealNote || t("photoMealJournal")],
       calories: Number(analysis?.calories) || 0,
       protein: Number(analysis?.protein) || 0,
       carbs: Number(analysis?.carbs) || 0,
       fat: Number(analysis?.fat) || 0,
-      confidence: analysis?.confidence || "manual fallback",
+      confidence: analysis?.confidence || t("manualFallback"),
       createdAt: new Date().toISOString()
     };
     setData((current) => ({ ...current, mealLogs: [log, ...current.mealLogs] }));
-    addRecentLog("Meal photo analyzed", `${log.foods.join(", ")} · ${log.calories || "?"} kcal · ${log.protein || 0}g protein`);
+    addRecentLog(t("mealPhotoAnalyzed"), `${log.foods.join(", ")} · ${log.calories || "?"} ${t("kcal")} · ${log.protein || 0}g ${t("protein")}`);
   }
 
   function saveManualMeal() {
-    const note = mealNote.trim() || "Meal";
-    const log = { id: makeId("meal"), photoUri: null, foods: [note], calories: 0, protein: 0, carbs: 0, fat: 0, confidence: "manual", createdAt: new Date().toISOString() };
+    const note = mealNote.trim() || t("genericMeal");
+    const log = { id: makeId("meal"), photoUri: null, foods: [note], calories: 0, protein: 0, carbs: 0, fat: 0, confidence: t("manual"), createdAt: new Date().toISOString() };
     setData((current) => ({ ...current, mealLogs: [log, ...current.mealLogs] }));
-    addRecentLog("Meal added manually", note);
+    addRecentLog(t("mealAddedManually"), note);
     setMealNote("");
   }
 
   function saveSleep() {
     const log = { id: makeId("sleep"), sleepAt: normalizeTimeInput(sleepAt, "23:35"), wakeAt: normalizeTimeInput(wakeAt, "07:00"), quality: sleepQuality || "8", createdAt: new Date().toISOString() };
     setData((current) => ({ ...current, sleepLogs: [log, ...current.sleepLogs] }));
-    addRecentLog("Sleep timing updated", `${log.sleepAt} to ${log.wakeAt} · quality ${log.quality}/10`);
+    addRecentLog(t("sleepTimingUpdated"), `${log.sleepAt} - ${log.wakeAt} · ${t("sleepQuality")} ${log.quality}/10`);
   }
 
   async function captureIngredients() {
-    const uri = await requestCameraPhoto();
+    const uri = await requestCameraPhoto(cameraMessages());
     if (!uri) return;
     const analysis = await analyzePhoto("ingredients", uri);
     const scan = {
       id: makeId("ingredient"),
       photoUri: uri,
       detected: analysis?.ingredients || ["eggs", "spinach", "rice"],
-      suggestions: analysis?.suggestions || ["Protein grain bowl", "Vegetable omelet", "Recovery snack"],
-      confidence: analysis?.confidence || "manual fallback",
+      suggestions: analysis?.suggestions || mealIdeas(),
+      confidence: analysis?.confidence || t("manualFallback"),
       createdAt: new Date().toISOString()
     };
     setData((current) => ({ ...current, ingredientScans: [scan, ...current.ingredientScans] }));
-    addRecentLog("Kitchen ingredients analyzed", scan.detected.join(", "));
+    addRecentLog(t("kitchenIngredientsAnalyzed"), scan.detected.join(", "));
   }
 
   async function suggestMeals() {
@@ -596,37 +930,37 @@ export default function App() {
         id: makeId("ingredient"),
         photoUri: null,
         detected: analysis?.ingredients || ingredients.split(",").map((item) => item.trim()).filter(Boolean),
-        suggestions: analysis?.suggestions || ["Lean protein grain bowl", "Vegetable omelet", "Simple recovery snack"],
-        confidence: analysis?.confidence || "AI text",
+        suggestions: analysis?.suggestions || mealIdeas(),
+        confidence: analysis?.confidence || "AI",
         createdAt: new Date().toISOString()
       };
       setData((current) => ({ ...current, ingredientScans: [scan, ...current.ingredientScans] }));
-      addRecentLog("Meal suggestions generated", scan.detected.join(", "));
+      addRecentLog(t("mealSuggestionsGenerated"), scan.detected.join(", "));
     } catch (error) {
       const scan = {
         id: makeId("ingredient"),
         photoUri: null,
         detected: ingredients.split(",").map((item) => item.trim()).filter(Boolean),
-        suggestions: ["Lean protein grain bowl", "Vegetable omelet", "Simple recovery snack"],
-        confidence: "local fallback",
+        suggestions: mealIdeas(),
+        confidence: t("localFallback"),
         createdAt: new Date().toISOString()
       };
       setData((current) => ({ ...current, ingredientScans: [scan, ...current.ingredientScans] }));
-      Alert.alert("AI fallback", error.message);
+      Alert.alert(t("aiFallbackTitle"), error.message);
     } finally {
       setBusy("");
     }
   }
 
   async function captureBodyPhoto() {
-    const uri = await requestCameraPhoto();
+    const uri = await requestCameraPhoto(cameraMessages());
     if (uri) setBodyForm((current) => ({ ...current, photoUri: uri }));
   }
 
   async function createBodyEstimate() {
     const fallbackRange = estimateBodyFat(bodyForm);
     if (!fallbackRange || !bodyForm.photoUri) {
-      Alert.alert("More information needed", "Add height, weight, age, sex, and a progress photo before estimating 體脂率.");
+      Alert.alert(t("moreInfoNeeded"), t("addBodyPhotoFirst"));
       return;
     }
     const analysis = await analyzePhoto("body", bodyForm.photoUri, { bodyForm });
@@ -638,13 +972,13 @@ export default function App() {
       age: Number(bodyForm.age),
       sex: bodyForm.sex,
       estimatedRange: analysis?.estimatedRange || fallbackRange,
-      confidence: analysis?.confidence || "educational fallback",
-      notes: analysis?.notes || "Educational estimate only; not a medical measurement.",
+      confidence: analysis?.confidence || t("educationalFallback"),
+      notes: analysis?.notes || t("educationalBodyNote"),
       createdAt: new Date().toISOString()
     };
     setBodyDraft(estimate);
     setData((current) => ({ ...current, bodyEstimates: [estimate, ...current.bodyEstimates] }));
-    addRecentLog("體脂率 estimate created", `${estimate.estimatedRange} · ${estimate.confidence}`);
+    addRecentLog(t("bodyEstimateCreated"), `${estimate.estimatedRange} · ${estimate.confidence}`);
   }
 
   async function updateReminder(kind, patch) {
@@ -653,24 +987,24 @@ export default function App() {
     const enabledKey = isMorning ? "morningEnabled" : "nightEnabled";
     const timeKey = isMorning ? "morningTime" : "nightTime";
     const idKey = isMorning ? "morningNotificationId" : "nightNotificationId";
-    const title = isMorning ? "Vital Lens morning plan" : "Vital Lens nightly review";
-    const body = isMorning ? "Plan today's workout and meals." : "Review meals, training, and sleep target.";
+    const title = isMorning ? `Vital Lens ${t("morningPlan")}` : `Vital Lens ${t("sleepTarget")}`;
+    const body = isMorning ? t("dailyReviewDetail") : t("reviewMealsTrainingSleep");
     await cancelReminder(settings[idKey]);
     settings[idKey] = null;
-    if (settings[enabledKey]) settings[idKey] = await scheduleDailyReminder(settings[timeKey], title, body);
+    if (settings[enabledKey]) settings[idKey] = await scheduleDailyReminder(settings[timeKey], title, body, { title: t("notificationDisabledTitle"), body: t("notificationDisabledBody") });
     setData((current) => ({ ...current, reminderSettings: settings }));
   }
 
   async function createAppleCalendarEvent(kind) {
     const permission = await Calendar.requestCalendarPermissionsAsync();
     if (!permission.granted) {
-      Alert.alert("Calendar permission needed", "Vital Lens can only add Apple Calendar events after permission is granted.");
+      Alert.alert(t("calendarPermissionTitle"), t("calendarPermissionBody"));
       return;
     }
     const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
     const targetCalendar = calendars.find((calendar) => calendar.allowsModifications) || calendars[0];
     if (!targetCalendar) {
-      Alert.alert("No calendar found", "No writable Apple Calendar was available on this device.");
+      Alert.alert(t("noCalendarTitle"), t("noCalendarBody"));
       return;
     }
     const startDate = new Date();
@@ -679,9 +1013,9 @@ export default function App() {
     if (kind === "sleep") startDate.setHours(23, 30, 0, 0);
     const endDate = new Date(startDate);
     endDate.setMinutes(startDate.getMinutes() + (kind === "sleep" ? 30 : 60));
-    await Calendar.createEventAsync(targetCalendar.id, { title: `Vital Lens ${kind}`, notes: "Created by Vital Lens.", startDate, endDate, timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone });
-    addRecentLog("Apple Calendar event added", kind);
-    Alert.alert("Calendar event added", `Added ${kind} event to Apple Calendar.`);
+    await Calendar.createEventAsync(targetCalendar.id, { title: `Vital Lens ${t(kind)}`, notes: "Created by Vital Lens.", startDate, endDate, timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone });
+    addRecentLog(t("calendarEventAdded"), t(kind));
+    Alert.alert(t("calendarEventAdded"), tt("calendarEventAddedBody", { kind: t(kind) }));
   }
 
   function openGoogleCalendar(kind) {
@@ -692,13 +1026,64 @@ export default function App() {
     const endDate = new Date(startDate);
     endDate.setMinutes(startDate.getMinutes() + (kind === "sleep" ? 30 : 60));
     const formatGoogleDate = (date) => date.toISOString().replace(/[-:]|\.\d{3}/g, "");
-    const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(`Vital Lens ${kind}`)}&dates=${formatGoogleDate(startDate)}/${formatGoogleDate(endDate)}&details=${encodeURIComponent("Created by Vital Lens.")}`;
+    const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(`Vital Lens ${t(kind)}`)}&dates=${formatGoogleDate(startDate)}/${formatGoogleDate(endDate)}&details=${encodeURIComponent("Created by Vital Lens.")}`;
     Linking.openURL(url);
-    addRecentLog("Google Calendar opened", kind);
+    addRecentLog(t("googleCalendarOpened"), t(kind));
   }
 
   function runDailyReview() {
-    addRecentLog("Daily review complete", "Plan training, add 25-35g protein, and protect tonight's sleep target.");
+    addRecentLog(t("dailyReviewComplete"), t("dailyReviewDetail"));
+  }
+
+  async function runTextAiTest(example) {
+    setBusy(`test-${example}`);
+    try {
+      const result = await postAI("/api/parse-activity", { text: example, locale, activityCatalogSummary: catalogSummary(locale) });
+      const activity = { ...localParseActivity(example, locale), ...result.activity };
+      setReadableAiTestResult(`${t("aiTextResultPrefix")}: ${example}`, {
+        activity: activity.displayName,
+        category: activity.category,
+        durationMinutes: activity.durationMinutes,
+        metrics: activity.metrics,
+        intensity: activity.intensity,
+        confidence: activity.confidence,
+        missingFields: activity.missingFields
+      });
+    } catch (error) {
+      const fallback = localParseActivity(example, locale);
+      setReadableAiTestResult(`${t("aiFallbackTitle")}: ${example}`, { error: error.message, fallback });
+    } finally {
+      setBusy("");
+    }
+  }
+
+  async function runPhotoAiTest(mode) {
+    const uri = await requestCameraPhoto(cameraMessages());
+    if (!uri) return;
+    setBusy(`test-${mode}`);
+    try {
+      const imageDataUrl = await imageToDataUrl(uri);
+      const result = await postAI("/api/analyze-photo", { mode, imageDataUrl, locale, context: { bodyForm, ingredients, activityCatalogSummary: catalogSummary(locale) } });
+      const analysis = result.analysis || {};
+      setReadableAiTestResult(`${t("photoAI")}: ${t(mode)}`, {
+        mode: analysis.mode,
+        confidence: analysis.confidence,
+        activity: analysis.activity?.displayName,
+        foods: analysis.foods,
+        calories: analysis.calories,
+        protein: analysis.protein,
+        carbs: analysis.carbs,
+        fat: analysis.fat,
+        ingredients: analysis.ingredients,
+        suggestions: analysis.suggestions,
+        estimatedRange: analysis.estimatedRange,
+        notes: analysis.notes
+      });
+    } catch (error) {
+      setReadableAiTestResult(`${t("aiPhotoFallbackTitle")}: ${t(mode)}`, { error: error.message });
+    } finally {
+      setBusy("");
+    }
   }
 
   const tabs = [
@@ -719,7 +1104,7 @@ export default function App() {
         <View style={styles.header}>
           <View style={styles.brandMark}><Text style={styles.brandText}>VL</Text></View>
           <View style={styles.headerCopy}>
-            <Text style={styles.eyebrow}>AI wellness tracker</Text>
+            <Text style={styles.eyebrow}>Vital Lens</Text>
             <Text style={styles.title}>Vital Lens</Text>
             <Text style={styles.subtitle}>{locale === "zh" ? "拍照優先的運動、飲食、睡眠與身體追蹤。" : "Camera-first training, diet, sleep, and body tracking."}</Text>
           </View>
@@ -737,33 +1122,33 @@ export default function App() {
           <View>
             <Text style={styles.sectionTitle}>{t("today")}</Text>
             <View style={styles.statusCard}>
-              <Text style={styles.statusLabel}>AI backend</Text>
-              <Text style={styles.statusValue}>{apiBase ? "Connected" : "Needs AI API URL"}</Text>
-              <Text style={styles.detail}>{apiBase || "Open Vital Lens Settings and add your Vercel backend URL."}</Text>
+              <Text style={styles.statusLabel}>{t("aiBackend")}</Text>
+              <Text style={styles.statusValue}>{apiBase ? t("aiConnected") : t("aiNeedsUrl")}</Text>
+              <Text style={styles.detail}>{apiBase || t("aiStatusHelp")}</Text>
             </View>
             <View style={styles.metricGrid}>
-              <Metric label="Move load" value={`${summary.moveLoad}%`} detail={`${allActivityLogs.length} sessions tracked`} color="#a25842" />
-              <Metric label="Nutrition" value={`${summary.nutrition}%`} detail={`${data.mealLogs.length} meals logged`} color="#6f8f72" />
-              <Metric label="Sleep rhythm" value={summary.sleep} detail={`Quality ${latestSleep.quality}/10`} color="#5c87a5" />
-              <Metric label="體脂率" value={latestBody?.estimatedRange || "Not yet"} detail="Educational range only" color="#d7a441" />
+              <Metric label={t("moveLoad")} value={`${summary.moveLoad}%`} detail={`${allActivityLogs.length} ${t("activity")}`} color="#a25842" />
+              <Metric label={t("nutrition")} value={`${summary.nutrition}%`} detail={`${data.mealLogs.length} ${t("diet")}`} color="#6f8f72" />
+              <Metric label={t("sleepRhythm")} value={summary.sleep} detail={`${t("sleepQuality")} ${latestSleep.quality}/10`} color="#5c87a5" />
+              <Metric label="體脂率" value={latestBody?.estimatedRange || t("statusNotYet")} detail={t("educationalBodyEstimate")} color="#d7a441" />
             </View>
-            <TouchableOpacity style={styles.primaryButton} onPress={runDailyReview}><Text style={styles.primaryButtonText}>Run daily review</Text></TouchableOpacity>
-            <RecentLogs logs={data.recentLogs} />
+            <TouchableOpacity style={styles.primaryButton} onPress={runDailyReview}><Text style={styles.primaryButtonText}>{t("dailyReview")}</Text></TouchableOpacity>
+            <RecentLogs logs={data.recentLogs} t={t} />
           </View>
         )}
 
         {activeTab === "Activity" && (
           <View>
-            <Panel title={t("activityCenter")} eyebrow="AI activity logging">
+            <Panel title={t("activityCenter")} eyebrow={t("photoAI")}>
               <Text style={styles.label}>{t("freeText")}</Text>
               <TextInput value={freeText} onChangeText={setFreeText} multiline style={[styles.input, styles.multiline]} placeholder="跑步 30 分鐘 3 miles easy" placeholderTextColor="#8a928e" />
               <TouchableOpacity style={styles.primaryButton} onPress={parseActivityWithAI}>
-                <Text style={styles.primaryButtonText}>{busy === "parse" ? "Parsing..." : t("parseWithAI")}</Text>
+                <Text style={styles.primaryButtonText}>{busy === "parse" ? t("parsing") : t("parseWithAI")}</Text>
               </TouchableOpacity>
-              <Insight text={`${t("aiDraft")}: ${draft.displayName || draft.activityName || "-"} · ${draft.durationMinutes || "?"} min · ${draft.confidence || "-"}`} />
+              <Insight text={`${t("aiDraft")}: ${draft.displayName || draft.activityName || "-"} · ${draft.durationMinutes || "?"} ${t("minuteShort")} · ${localizeMeta(draft.confidence, t) || "-"}`} />
             </Panel>
 
-            <Panel title={t("manualForm")} eyebrow="Editable structured fields">
+            <Panel title={t("manualForm")} eyebrow={t("activity")}>
               <ActivityCatalogPicker catalog={activityCatalog.slice(0, 18)} locale={locale} selectedId={manual.catalogId} onSelect={(item) => setManual({ ...manual, catalogId: item.id, displayName: labelFor(item, locale), category: item.category, formType: item.formType })} />
               <Field label={t("activityName")} value={manual.displayName || ""} onChangeText={(value) => updateManual("displayName", value)} />
               <View style={styles.row}>
@@ -773,33 +1158,33 @@ export default function App() {
               {manual.formType === "run" && (
                 <View style={styles.row}>
                   <Field label={t("distance")} value={String(manual.metrics?.distance || "")} onChangeText={(value) => updateManual("metrics.distance", value)} keyboardType="decimal-pad" />
-                  <Field label="Unit" value={String(manual.metrics?.distanceUnit || "km")} onChangeText={(value) => updateManual("metrics.distanceUnit", value)} />
+                  <Field label={t("unit")} value={String(manual.metrics?.distanceUnit || "km")} onChangeText={(value) => updateManual("metrics.distanceUnit", value)} />
                 </View>
               )}
               {manual.formType === "hold" && (
                 <View style={styles.row}>
-                  <Field label="Hold sec" value={String(manual.metrics?.holdSeconds || "")} onChangeText={(value) => updateManual("metrics.holdSeconds", value)} keyboardType="number-pad" />
-                  <Field label="Sets" value={String(manual.metrics?.sets || "")} onChangeText={(value) => updateManual("metrics.sets", value)} keyboardType="number-pad" />
+                  <Field label={t("holdSec")} value={String(manual.metrics?.holdSeconds || "")} onChangeText={(value) => updateManual("metrics.holdSeconds", value)} keyboardType="number-pad" />
+                  <Field label={t("sets")} value={String(manual.metrics?.sets || "")} onChangeText={(value) => updateManual("metrics.sets", value)} keyboardType="number-pad" />
                 </View>
               )}
               {manual.formType === "strength" && (
                 <>
                   <View style={styles.row}>
-                    <Field label="Sets" value={String(manual.metrics?.sets || "")} onChangeText={(value) => updateManual("metrics.sets", value)} keyboardType="number-pad" />
-                    <Field label="Reps" value={String(manual.metrics?.reps || "")} onChangeText={(value) => updateManual("metrics.reps", value)} keyboardType="number-pad" />
+                    <Field label={t("sets")} value={String(manual.metrics?.sets || "")} onChangeText={(value) => updateManual("metrics.sets", value)} keyboardType="number-pad" />
+                    <Field label={t("reps")} value={String(manual.metrics?.reps || "")} onChangeText={(value) => updateManual("metrics.reps", value)} keyboardType="number-pad" />
                   </View>
-                  <Field label="Weight" value={String(manual.metrics?.weight || "")} onChangeText={(value) => updateManual("metrics.weight", value)} keyboardType="decimal-pad" />
+                  <Field label={t("weight")} value={String(manual.metrics?.weight || "")} onChangeText={(value) => updateManual("metrics.weight", value)} keyboardType="decimal-pad" />
                 </>
               )}
               <Field label={t("notes")} value={manual.notes || ""} onChangeText={(value) => updateManual("notes", value)} multiline />
               <TouchableOpacity style={styles.primaryButton} onPress={() => saveActivity("manual")}><Text style={styles.primaryButtonText}>{t("saveActivity")}</Text></TouchableOpacity>
-              <TouchableOpacity style={styles.photoButton} onPress={captureWorkoutPhoto}><Text style={styles.photoButtonText}>{busy === "exercise" ? "Analyzing..." : t("analyzeWorkout")}</Text></TouchableOpacity>
+              <TouchableOpacity style={styles.photoButton} onPress={captureWorkoutPhoto}><Text style={styles.photoButtonText}>{busy === "exercise" ? t("analyzing") : t("analyzeWorkout")}</Text></TouchableOpacity>
             </Panel>
 
-            <Panel title={t("checkList")} eyebrow="Plans">
+            <Panel title={t("checkList")} eyebrow={t("plans")}>
               <View style={styles.row}>
                 <Field label={t("activityName")} value={planTitle} onChangeText={setPlanTitle} />
-                <Field label="Time" value={planTime} onChangeText={setPlanTime} />
+                <Field label={t("time")} value={planTime} onChangeText={setPlanTime} />
               </View>
               <TouchableOpacity style={styles.secondaryButton} onPress={() => addPlan()}><Text style={styles.secondaryButtonText}>{t("addPlan")}</Text></TouchableOpacity>
               {(data.plannedActivities || []).map((plan) => (
@@ -816,84 +1201,104 @@ export default function App() {
               ))}
             </Panel>
 
-            <Panel title={t("history")} eyebrow="Completed">
-              <ActivityHistory logs={allActivityLogs} />
+            <Panel title={t("history")} eyebrow={t("completed")}>
+              <ActivityHistory logs={allActivityLogs} t={t} />
             </Panel>
           </View>
         )}
 
         {activeTab === "Diet" && (
-          <Panel title="Capture food without typing everything" eyebrow="Photo meal journal">
-            <TouchableOpacity style={styles.photoButton} onPress={captureMealPhoto}><Text style={styles.photoButtonText}>{busy === "meal" ? "Analyzing..." : t("analyzeMeal")}</Text></TouchableOpacity>
-            <Field label="Meal note" value={mealNote} onChangeText={setMealNote} placeholder="chicken rice bowl" />
-            <TouchableOpacity style={styles.primaryButton} onPress={saveManualMeal}><Text style={styles.primaryButtonText}>Save meal</Text></TouchableOpacity>
+          <Panel title={t("photoMealJournal")} eyebrow={t("diet")}>
+            <TouchableOpacity style={styles.photoButton} onPress={captureMealPhoto}><Text style={styles.photoButtonText}>{busy === "meal" ? t("analyzing") : t("analyzeMeal")}</Text></TouchableOpacity>
+            <Field label={t("mealNote")} value={mealNote} onChangeText={setMealNote} placeholder={t("genericMeal")} />
+            <TouchableOpacity style={styles.primaryButton} onPress={saveManualMeal}><Text style={styles.primaryButtonText}>{t("saveMeal")}</Text></TouchableOpacity>
             <LatestPhoto uri={data.mealLogs[0]?.photoUri} />
-            <Insight text={data.mealLogs[0] ? `${data.mealLogs[0].foods.join(", ")} · ${data.mealLogs[0].calories || "manual"} kcal · ${data.mealLogs[0].protein || 0}g protein · confidence ${data.mealLogs[0].confidence}` : "Take a food photo and AI estimates food, calories, protein, carbs, fat, and uncertainty."} />
+            <Insight text={data.mealLogs[0] ? `${data.mealLogs[0].foods.join(", ")} · ${data.mealLogs[0].calories || t("manual")} ${t("kcal")} · ${data.mealLogs[0].protein || 0}g ${t("protein")} · ${t("confidence")} ${data.mealLogs[0].confidence}` : t("foodPhotoHelp")} />
           </Panel>
         )}
 
         {activeTab === "Sleep" && (
-          <Panel title="Track sleeping timing" eyebrow="Recovery rhythm">
+          <Panel title={t("trackSleep")} eyebrow={t("recoveryRhythm")}>
             <View style={styles.row}>
-              <Field label="Sleep time" value={sleepAt} onChangeText={setSleepAt} placeholder="23:35" />
-              <Field label="Wake time" value={wakeAt} onChangeText={setWakeAt} placeholder="07:00" />
+              <Field label={t("sleepTime")} value={sleepAt} onChangeText={setSleepAt} placeholder="23:35" />
+              <Field label={t("wakeTime")} value={wakeAt} onChangeText={setWakeAt} placeholder="07:00" />
             </View>
-            <Field label="Sleep quality 1-10" value={sleepQuality} onChangeText={setSleepQuality} keyboardType="number-pad" />
-            <TouchableOpacity style={styles.primaryButton} onPress={saveSleep}><Text style={styles.primaryButtonText}>Update sleep</Text></TouchableOpacity>
+            <Field label={t("sleepQuality")} value={sleepQuality} onChangeText={setSleepQuality} keyboardType="number-pad" />
+            <TouchableOpacity style={styles.primaryButton} onPress={saveSleep}><Text style={styles.primaryButtonText}>{t("updateSleep")}</Text></TouchableOpacity>
           </Panel>
         )}
 
         {activeTab === "Kitchen" && (
-          <Panel title="Turn ingredients into meals" eyebrow="Kitchen scanner">
-            <TouchableOpacity style={styles.photoButton} onPress={captureIngredients}><Text style={styles.photoButtonText}>{busy === "ingredients" ? "Analyzing..." : t("analyzeIngredients")}</Text></TouchableOpacity>
-            <Field label="Ingredients seen" value={ingredients} onChangeText={setIngredients} multiline />
-            <TouchableOpacity style={styles.primaryButton} onPress={suggestMeals}><Text style={styles.primaryButtonText}>Suggest meals</Text></TouchableOpacity>
+          <Panel title={t("turnIngredientsIntoMeals")} eyebrow={t("kitchenScanner")}>
+            <TouchableOpacity style={styles.photoButton} onPress={captureIngredients}><Text style={styles.photoButtonText}>{busy === "ingredients" ? t("analyzing") : t("analyzeIngredients")}</Text></TouchableOpacity>
+            <Field label={t("ingredientsSeen")} value={ingredients} onChangeText={setIngredients} multiline />
+            <TouchableOpacity style={styles.primaryButton} onPress={suggestMeals}><Text style={styles.primaryButtonText}>{t("suggestMeals")}</Text></TouchableOpacity>
             <LatestPhoto uri={data.ingredientScans[0]?.photoUri} />
-            <SuggestionList items={data.ingredientScans[0]?.suggestions || ["Salmon rice bowl", "Spinach egg wrap", "Greek yogurt recovery bowl"]} />
+            <SuggestionList items={data.ingredientScans[0]?.suggestions || mealIdeas()} t={t} />
           </Panel>
         )}
 
         {activeTab === "Body" && (
-          <Panel title="Estimate 體脂率 from progress context" eyebrow="Educational body estimate">
-            <Text style={styles.warning}>This is an educational range, not a medical measurement. Use consistent lighting, posture, and distance for progress tracking.</Text>
+          <Panel title={t("bodyEstimateTitle")} eyebrow={t("educationalBodyEstimate")}>
+            <Text style={styles.warning}>{t("educationalBodyNote")}</Text>
             <View style={styles.row}>
-              <Field label="Height cm" value={bodyForm.height} onChangeText={(height) => setBodyForm((current) => ({ ...current, height }))} keyboardType="number-pad" />
-              <Field label="Weight kg" value={bodyForm.weight} onChangeText={(weight) => setBodyForm((current) => ({ ...current, weight }))} keyboardType="decimal-pad" />
+              <Field label={t("heightCm")} value={bodyForm.height} onChangeText={(height) => setBodyForm((current) => ({ ...current, height }))} keyboardType="number-pad" />
+              <Field label={t("weightKg")} value={bodyForm.weight} onChangeText={(weight) => setBodyForm((current) => ({ ...current, weight }))} keyboardType="decimal-pad" />
             </View>
             <View style={styles.row}>
-              <Field label="Age" value={bodyForm.age} onChangeText={(age) => setBodyForm((current) => ({ ...current, age }))} keyboardType="number-pad" />
+              <Field label={t("age")} value={bodyForm.age} onChangeText={(age) => setBodyForm((current) => ({ ...current, age }))} keyboardType="number-pad" />
               <View style={styles.field}>
-                <Text style={styles.label}>Sex</Text>
-                <Segmented values={["Male", "Female"]} value={bodyForm.sex} onChange={(sex) => setBodyForm((current) => ({ ...current, sex }))} />
+                <Text style={styles.label}>{t("sex")}</Text>
+                <Segmented values={[{ label: t("male"), value: "Male" }, { label: t("female"), value: "Female" }]} value={bodyForm.sex} onChange={(sex) => setBodyForm((current) => ({ ...current, sex }))} />
               </View>
             </View>
-            <TouchableOpacity style={styles.photoButton} onPress={captureBodyPhoto}><Text style={styles.photoButtonText}>Take body progress photo</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.photoButton} onPress={captureBodyPhoto}><Text style={styles.photoButtonText}>{t("takeBodyPhoto")}</Text></TouchableOpacity>
             <LatestPhoto uri={bodyForm.photoUri || bodyDraft?.photoUri} />
-            <TouchableOpacity style={styles.primaryButton} onPress={createBodyEstimate}><Text style={styles.primaryButtonText}>{busy === "body" ? "Analyzing..." : t("analyzeBody")}</Text></TouchableOpacity>
-            <Insight text={bodyDraft ? `Estimated range: ${bodyDraft.estimatedRange}. Confidence: ${bodyDraft.confidence}. ${bodyDraft.notes || ""}` : "Add height, weight, age, sex, and a photo to generate an educational range."} />
+            <TouchableOpacity style={styles.primaryButton} onPress={createBodyEstimate}><Text style={styles.primaryButtonText}>{busy === "body" ? t("analyzing") : t("analyzeBody")}</Text></TouchableOpacity>
+            <Insight text={bodyDraft ? tt("latestEstimate", { range: bodyDraft.estimatedRange, confidence: bodyDraft.confidence, notes: bodyDraft.notes || "" }) : t("bodyEstimateHelp")} />
           </Panel>
         )}
 
         {activeTab === "Calendar" && (
-          <Panel title="Notifications and calendar" eyebrow="Daily rhythm">
-            <ReminderControl label="Morning plan" time={data.reminderSettings.morningTime} enabled={data.reminderSettings.morningEnabled} onTimeChange={(time) => setData((current) => ({ ...current, reminderSettings: { ...current.reminderSettings, morningTime: normalizeTimeInput(time, current.reminderSettings.morningTime) } }))} onToggle={(enabled) => updateReminder("morning", { morningEnabled: enabled })} onSchedule={() => updateReminder("morning", {})} />
-            <ReminderControl label="Night review" time={data.reminderSettings.nightTime} enabled={data.reminderSettings.nightEnabled} onTimeChange={(time) => setData((current) => ({ ...current, reminderSettings: { ...current.reminderSettings, nightTime: normalizeTimeInput(time, current.reminderSettings.nightTime) } }))} onToggle={(enabled) => updateReminder("night", { nightEnabled: enabled })} onSchedule={() => updateReminder("night", {})} />
+          <Panel title={t("calendarAndNotifications")} eyebrow={t("dailyRhythm")}>
+            <ReminderControl label={t("morningPlan")} time={data.reminderSettings.morningTime} enabled={data.reminderSettings.morningEnabled} onTimeChange={(time) => setData((current) => ({ ...current, reminderSettings: { ...current.reminderSettings, morningTime: normalizeTimeInput(time, current.reminderSettings.morningTime) } }))} onToggle={(enabled) => updateReminder("morning", { morningEnabled: enabled })} onSchedule={() => updateReminder("morning", {})} t={t} />
+            <ReminderControl label={t("nightReview")} time={data.reminderSettings.nightTime} enabled={data.reminderSettings.nightEnabled} onTimeChange={(time) => setData((current) => ({ ...current, reminderSettings: { ...current.reminderSettings, nightTime: normalizeTimeInput(time, current.reminderSettings.nightTime) } }))} onToggle={(enabled) => updateReminder("night", { nightEnabled: enabled })} onSchedule={() => updateReminder("night", {})} t={t} />
             {["workout", "meal", "sleep"].map((kind) => (
               <View key={kind} style={styles.calendarRow}>
-                <Text style={styles.calendarKind}>{kind}</Text>
-                <TouchableOpacity style={styles.secondaryButton} onPress={() => createAppleCalendarEvent(kind)}><Text style={styles.secondaryButtonText}>Apple Calendar</Text></TouchableOpacity>
-                <TouchableOpacity style={styles.secondaryButton} onPress={() => openGoogleCalendar(kind)}><Text style={styles.secondaryButtonText}>Google Calendar</Text></TouchableOpacity>
+                <Text style={styles.calendarKind}>{t(kind)}</Text>
+                <TouchableOpacity style={styles.secondaryButton} onPress={() => createAppleCalendarEvent(kind)}><Text style={styles.secondaryButtonText}>{t("appleCalendar")}</Text></TouchableOpacity>
+                <TouchableOpacity style={styles.secondaryButton} onPress={() => openGoogleCalendar(kind)}><Text style={styles.secondaryButtonText}>{t("googleCalendar")}</Text></TouchableOpacity>
               </View>
             ))}
           </Panel>
         )}
 
         {activeTab === "Settings" && (
-          <Panel title={t("settings")} eyebrow="AI and language">
+          <Panel title={t("settings")} eyebrow={t("settingsEyebrow")}>
             <Text style={styles.label}>{t("language")}</Text>
             <Segmented values={[t("english"), t("traditionalChinese")]} value={locale === "zh" ? t("traditionalChinese") : t("english")} onChange={(value) => setData((current) => ({ ...current, settings: { ...current.settings, locale: value === t("traditionalChinese") ? "zh" : "en" } }))} />
             <Field label={t("aiUrl")} value={data.settings.aiApiUrl || ""} onChangeText={(aiApiUrl) => setData((current) => ({ ...current, settings: { ...current.settings, aiApiUrl } }))} placeholder="https://your-app.vercel.app" />
-            <Insight text="Keep OPENAI_API_KEY in Vercel only. The Expo app calls your cloud backend; it never stores the API key." />
+            <Insight text={t("openaiKeyNote")} />
+            <Insight text={t("expoSettingsNote")} />
+            <Insight text={t("macAwayInstall")} />
+            <View style={styles.aiTestBlock}>
+              <Text style={styles.sectionTitle}>{t("aiTest")}</Text>
+              <Text style={styles.detail}>{t("aiTestIntro")}</Text>
+              <Text style={styles.label}>{t("aiTestTextExamples")}</Text>
+              {["跑步 30 分鐘 3 miles easy", "plank 3 sets 60 sec", "深蹲 4 組 每組 10 下"].map((example) => (
+                <TouchableOpacity key={example} style={styles.secondaryButton} onPress={() => runTextAiTest(example)}>
+                  <Text style={styles.secondaryButtonText}>{busy === `test-${example}` ? t("parsing") : example}</Text>
+                </TouchableOpacity>
+              ))}
+              <Text style={styles.label}>{t("photoAI")}</Text>
+              <TouchableOpacity style={styles.photoButton} onPress={() => runPhotoAiTest("exercise")}><Text style={styles.photoButtonText}>{busy === "test-exercise" ? t("analyzing") : t("aiTestExercisePhoto")}</Text></TouchableOpacity>
+              <TouchableOpacity style={styles.photoButton} onPress={() => runPhotoAiTest("meal")}><Text style={styles.photoButtonText}>{busy === "test-meal" ? t("analyzing") : t("aiTestMealPhoto")}</Text></TouchableOpacity>
+              <TouchableOpacity style={styles.photoButton} onPress={() => runPhotoAiTest("ingredients")}><Text style={styles.photoButtonText}>{busy === "test-ingredients" ? t("analyzing") : t("aiTestIngredientsPhoto")}</Text></TouchableOpacity>
+              <Text style={styles.detail}>{t("aiTestBodyContext")}</Text>
+              <TouchableOpacity style={styles.photoButton} onPress={() => runPhotoAiTest("body")}><Text style={styles.photoButtonText}>{busy === "test-body" ? t("analyzing") : t("aiTestBodyPhoto")}</Text></TouchableOpacity>
+              <Text style={styles.label}>{t("aiTestResult")}</Text>
+              <Insight text={aiTestResult || t("statusNotYet")} />
+            </View>
           </Panel>
         )}
       </ScrollView>
@@ -925,11 +1330,14 @@ function Panel({ eyebrow, title, children }) {
 function Segmented({ values, value, onChange }) {
   return (
     <View style={styles.segmented}>
-      {values.map((item) => (
-        <TouchableOpacity key={item} style={[styles.segment, value === item && styles.activeSegment]} onPress={() => onChange(item)}>
-          <Text style={[styles.segmentText, value === item && styles.activeSegmentText]}>{item}</Text>
+      {values.map((item) => {
+        const optionValue = typeof item === "string" ? item : item.value;
+        const optionLabel = typeof item === "string" ? item : item.label;
+        return (
+        <TouchableOpacity key={optionValue} style={[styles.segment, value === optionValue && styles.activeSegment]} onPress={() => onChange(optionValue)}>
+          <Text style={[styles.segmentText, value === optionValue && styles.activeSegmentText]}>{optionLabel}</Text>
         </TouchableOpacity>
-      ))}
+      );})}
     </View>
   );
 }
@@ -968,8 +1376,8 @@ function ActivityCatalogPicker({ catalog, locale, selectedId, onSelect }) {
   );
 }
 
-function ActivityHistory({ logs }) {
-  if (!logs.length) return <Text style={styles.detail}>No completed activities yet.</Text>;
+function ActivityHistory({ logs, t }) {
+  if (!logs.length) return <Text style={styles.detail}>{t("noActivity")}</Text>;
   const grouped = logs.reduce((acc, log) => {
     const key = formatDate(log.completedAt || log.createdAt);
     acc[key] = acc[key] || [];
@@ -983,7 +1391,7 @@ function ActivityHistory({ logs }) {
         <View key={log.id} style={styles.logItem}>
           <Text style={styles.logTime}>{formatTime(log.completedAt || log.createdAt)}</Text>
           <Text style={styles.logTitle}>{log.displayName}</Text>
-          <Text style={styles.detail}>{log.category} · {log.durationMinutes || "?"} min · {log.intensity || "Moderate"} · {log.source}</Text>
+          <Text style={styles.detail}>{localizeMeta(log.category, t)} · {log.durationMinutes || "?"} {t("minuteShort")} · {localizeMeta(log.intensity || "Moderate", t)} · {localizeMeta(log.source, t)}</Text>
           {!!log.notes && <Text style={styles.detail}>{log.notes}</Text>}
         </View>
       ))}
@@ -991,47 +1399,47 @@ function ActivityHistory({ logs }) {
   ));
 }
 
-function SuggestionList({ items }) {
+function SuggestionList({ items, t }) {
   return (
     <View style={styles.suggestionList}>
       {items.map((item) => (
         <View key={item} style={styles.suggestionItem}>
           <Text style={styles.suggestionTitle}>{item}</Text>
-          <Text style={styles.detail}>High-protein option · works with today's training load.</Text>
+          <Text style={styles.detail}>{t("suggestionDetail")}</Text>
         </View>
       ))}
     </View>
   );
 }
 
-function RecentLogs({ logs }) {
+function RecentLogs({ logs, t }) {
   return (
     <View style={styles.panel}>
-      <Text style={styles.eyebrow}>Recent logs</Text>
+      <Text style={styles.eyebrow}>{t("recentLogs")}</Text>
       {logs.map((log) => (
         <View key={log.id} style={styles.logItem}>
           <Text style={styles.logTime}>{formatTime(log.createdAt)}</Text>
-          <Text style={styles.logTitle}>{log.title}</Text>
-          <Text style={styles.detail}>{log.detail}</Text>
+          <Text style={styles.logTitle}>{log.titleKey ? t(log.titleKey) : log.title}</Text>
+          <Text style={styles.detail}>{log.detailKey ? t(log.detailKey) : log.detail}</Text>
         </View>
       ))}
     </View>
   );
 }
 
-function ReminderControl({ label, time, enabled, onToggle, onTimeChange, onSchedule }) {
+function ReminderControl({ label, time, enabled, onToggle, onTimeChange, onSchedule, t }) {
   return (
     <View style={styles.reminderCard}>
       <View style={styles.reminderHeader}>
         <View>
           <Text style={styles.logTitle}>{label}</Text>
-          <Text style={styles.detail}>Use HH:MM, 24-hour time.</Text>
+          <Text style={styles.detail}>{t("timeInputHelp")}</Text>
         </View>
         <Switch value={enabled} onValueChange={onToggle} />
       </View>
       <View style={styles.row}>
-        <Field label="Time" value={time} onChangeText={onTimeChange} placeholder="08:00" />
-        <TouchableOpacity style={styles.secondaryButton} onPress={onSchedule}><Text style={styles.secondaryButtonText}>Schedule</Text></TouchableOpacity>
+        <Field label={t("time")} value={time} onChangeText={onTimeChange} placeholder="08:00" />
+        <TouchableOpacity style={styles.secondaryButton} onPress={onSchedule}><Text style={styles.secondaryButtonText}>{t("schedule")}</Text></TouchableOpacity>
       </View>
     </View>
   );
@@ -1086,6 +1494,7 @@ const styles = StyleSheet.create({
   insight: { padding: 14, borderRadius: 8, backgroundColor: "#f7f8f5", marginTop: 10 },
   insightText: { color: "#4f5a56", lineHeight: 21 },
   warning: { color: "#7c5620", backgroundColor: "#fbf3df", borderRadius: 8, padding: 12, lineHeight: 20, marginBottom: 12 },
+  aiTestBlock: { marginTop: 18, paddingTop: 14, borderTopWidth: 1, borderTopColor: "#dce3df" },
   suggestionList: { gap: 10, marginTop: 10 },
   suggestionItem: { padding: 13, borderRadius: 8, borderWidth: 1, borderColor: "#dce3df" },
   suggestionTitle: { color: "#1f2523", fontWeight: "900", fontSize: 16 },

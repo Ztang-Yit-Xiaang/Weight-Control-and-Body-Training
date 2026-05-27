@@ -58,6 +58,27 @@ Note: this project targets Expo SDK 54 for compatibility with the current iOS Ap
 
 Expo Go is for development and depends on a running Metro server. To log from your phone away from the Mac, deploy the `backend` folder to Vercel from GitHub and create an installable iPhone build with EAS. See [Cloud Deployment](docs/cloud-deployment.md).
 
+## Downloadable iPhone App
+
+For a private iPhone install that does not require Expo Go or your Mac running Metro, use an EAS internal iOS build:
+
+```bash
+npm install -g eas-cli
+eas login
+eas build:configure
+eas build --platform ios --profile preview
+```
+
+When the build finishes, Expo gives you a private install link. Open that link on your iPhone and install Vital Lens directly.
+
+Requirements and behavior:
+
+- An Apple Developer Program account is required for real iPhone installation.
+- The AI backend stays on Vercel, so the app can work away from your Mac.
+- Backend-only changes do not require a new iPhone build.
+- App UI/code changes require a new EAS build.
+- Set `EXPO_PUBLIC_AI_API_URL=https://weight-control-and-body-training.vercel.app` for the build, or keep the app's default backend URL.
+
 ## Implementation Notes
 
 - V1 stores all logs locally on-device with AsyncStorage.

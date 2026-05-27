@@ -66,7 +66,7 @@ The app never stores `OPENAI_API_KEY`; only the Vercel backend uses it.
 
 ## 4. Installable iPhone App Away From Mac
 
-Expo Go with `npx expo start` depends on your Mac running Metro. To use Vital Lens away from the Mac, make an installable iOS build with EAS.
+Expo Go with `npx expo start` depends on your Mac running Metro. To use Vital Lens away from the Mac, make an EAS internal iOS build first. This creates a private install link that you open on your iPhone.
 
 Install EAS CLI:
 
@@ -87,6 +87,17 @@ Create an internal iOS build:
 eas build --platform ios --profile preview
 ```
 
+After the build finishes:
+
+1. Open the EAS build page.
+2. Copy or open the private install link on your iPhone.
+3. Install Vital Lens directly from that link.
+4. Keep the Vercel backend URL as:
+
+```text
+https://weight-control-and-body-training.vercel.app
+```
+
 For TestFlight/App Store distribution, use:
 
 ```bash
@@ -95,6 +106,8 @@ eas submit --platform ios --profile production
 ```
 
 iOS installable builds require an Apple Developer Program account.
+
+Backend-only changes on Vercel do not require a new iPhone build. Any app UI/code change does require a new EAS build.
 
 ## 5. Daily Workflow
 
