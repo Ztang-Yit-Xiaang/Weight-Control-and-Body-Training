@@ -30,7 +30,7 @@ Notifications.setNotificationHandler({
 });
 
 const STORAGE_KEY = "vital-lens-state-v2";
-const DEFAULT_AI_API_URL = process.env.EXPO_PUBLIC_AI_API_URL || "";
+const DEFAULT_AI_API_URL = process.env.EXPO_PUBLIC_AI_API_URL || "https://weight-control-and-body-training.vercel.app";
 
 const copy = {
   en: {
@@ -356,7 +356,11 @@ export default function App() {
           setData({
             ...initialState,
             ...parsed,
-            settings: { ...initialState.settings, ...parsed.settings },
+            settings: {
+              ...initialState.settings,
+              ...parsed.settings,
+              aiApiUrl: parsed.settings?.aiApiUrl || initialState.settings.aiApiUrl
+            },
             reminderSettings: { ...initialState.reminderSettings, ...parsed.reminderSettings }
           });
         }
@@ -732,6 +736,11 @@ export default function App() {
         {activeTab === "Home" && (
           <View>
             <Text style={styles.sectionTitle}>{t("today")}</Text>
+            <View style={styles.statusCard}>
+              <Text style={styles.statusLabel}>AI backend</Text>
+              <Text style={styles.statusValue}>{apiBase ? "Connected" : "Needs AI API URL"}</Text>
+              <Text style={styles.detail}>{apiBase || "Open Vital Lens Settings and add your Vercel backend URL."}</Text>
+            </View>
             <View style={styles.metricGrid}>
               <Metric label="Move load" value={`${summary.moveLoad}%`} detail={`${allActivityLogs.length} sessions tracked`} color="#a25842" />
               <Metric label="Nutrition" value={`${summary.nutrition}%`} detail={`${data.mealLogs.length} meals logged`} color="#6f8f72" />
@@ -1044,6 +1053,9 @@ const styles = StyleSheet.create({
   tabText: { color: "#67716d", fontWeight: "800" },
   activeTabText: { color: "#fff" },
   sectionTitle: { color: "#1f2523", fontSize: 24, fontWeight: "900", marginBottom: 14 },
+  statusCard: { padding: 14, borderRadius: 8, backgroundColor: "#fff", borderWidth: 1, borderColor: "#dce3df", marginBottom: 14 },
+  statusLabel: { color: "#67716d", fontWeight: "800", textTransform: "uppercase", fontSize: 12 },
+  statusValue: { color: "#1f2523", fontWeight: "900", fontSize: 18, marginTop: 4 },
   metricGrid: { gap: 12, marginBottom: 14 },
   metricCard: { padding: 16, borderRadius: 8, backgroundColor: "#fff", borderWidth: 1, borderColor: "#dce3df" },
   metricLabel: { color: "#67716d", fontWeight: "800" },
