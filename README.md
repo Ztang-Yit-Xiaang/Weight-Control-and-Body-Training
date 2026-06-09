@@ -87,21 +87,63 @@ Requirements and behavior:
 - Google Calendar v1 opens a prefilled event URL instead of using full Google OAuth.
 - Notification times use 24-hour `HH:MM` input. Defaults are `08:00` and `20:30`.
 
-## WeChat Mini Program Direction
+## WeChat Mini Program: How To Use And Deploy
 
-This branch adds a separate WeChat Mini Program prototype in:
+The WeChat version is a separate Mini Program project in:
 
 ```text
 wechat-miniprogram/
 ```
 
-Open that folder in WeChat Developer Tools. It includes Home, Activity, Diet, Kitchen, Body, Sleep, Settings, and AI Test flows, and it calls the same Vercel AI backend:
+Think of the system as two pieces:
+
+- `wechat-miniprogram/`: the WeChat frontend that users open inside WeChat.
+- `backend/` on Vercel: the AI service that safely holds `OPENAI_API_KEY`.
+
+The Mini Program stores personal logs locally with WeChat storage. It sends only AI requests to the Vercel backend.
+
+### Use It Locally
+
+1. Install WeChat Developer Tools.
+2. Import this folder in WeChat Developer Tools:
+
+```text
+/Users/chenyixin/Documents/Weight Control and Body Training/wechat-miniprogram
+```
+
+3. For local simulator testing, keep the AppID as `touristappid`.
+4. Open the Mini Program and use the top tabs:
+   - `Home`: see recent logs and backend status.
+   - `Activity`: parse text like `跑步 30 分鐘 3 miles easy` or analyze an exercise photo.
+   - `Diet`: upload/take meal photos and save meal notes.
+   - `Kitchen`: upload ingredients or type ingredients to get meal ideas.
+   - `Body`: estimate an educational 體脂率 range from body context/photo.
+   - `Sleep`: save sleep and wake timing.
+   - `Settings`: switch English/繁體中文, edit backend URL, and run AI tests.
+
+The default backend URL is:
 
 ```text
 https://weight-control-and-body-training.vercel.app
 ```
 
-See [WeChat Mini Program Setup](docs/wechat-miniprogram.md) for AppID, request-domain, preview, tester, and release steps.
+### Deploy Or Share It
+
+1. Register or open your WeChat Mini Program account and get the real Mini Program AppID.
+2. Replace `touristappid` in `wechat-miniprogram/project.config.json` with that AppID.
+3. In the WeChat Mini Program admin console, add this request legal domain:
+
+```text
+https://weight-control-and-body-training.vercel.app
+```
+
+4. In WeChat Developer Tools, click `Preview` and scan the QR code with WeChat for your own phone test.
+5. To share with friends before public release, add them as project members/testers in the WeChat admin console, then upload a trial version from WeChat Developer Tools.
+6. For public access, submit the uploaded version for WeChat review and publish after approval.
+
+Important: people do not download a WeChat Mini Program like an iOS app. They open it through WeChat search, QR code, shared card, preview QR, or trial version.
+
+See [WeChat Mini Program Setup](docs/wechat-miniprogram.md) for the longer checklist.
 
 ## OpenAI Backend
 
