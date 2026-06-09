@@ -87,6 +87,22 @@ Requirements and behavior:
 - Google Calendar v1 opens a prefilled event URL instead of using full Google OAuth.
 - Notification times use 24-hour `HH:MM` input. Defaults are `08:00` and `20:30`.
 
+## WeChat Mini Program Direction
+
+This branch adds a separate WeChat Mini Program prototype in:
+
+```text
+wechat-miniprogram/
+```
+
+Open that folder in WeChat Developer Tools. It includes Home, Activity, Diet, Kitchen, Body, Sleep, Settings, and AI Test flows, and it calls the same Vercel AI backend:
+
+```text
+https://weight-control-and-body-training.vercel.app
+```
+
+See [WeChat Mini Program Setup](docs/wechat-miniprogram.md) for AppID, request-domain, preview, tester, and release steps.
+
 ## OpenAI Backend
 
 Deploy this repo to Vercel with the project root directory set to `backend`, then set these environment variables:

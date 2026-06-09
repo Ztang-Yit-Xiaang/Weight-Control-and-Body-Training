@@ -1,0 +1,13 @@
+{
+  "pages": [
+    "pages/home/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "Vital Lens",
+    "navigationBarBackgroundColor": "#1f2523",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#eef2ee"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

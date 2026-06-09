@@ -1,0 +1,137 @@
+<view class="page">
+  <view class="hero">
+    <view class="mark">VL</view>
+    <view class="hero-copy">
+      <view class="eyebrow">Vital Lens</view>
+      <view class="title">Vital Lens</view>
+      <view class="subtitle">{{text.welcome}}</view>
+    </view>
+  </view>
+
+  <scroll-view class="tabs" scroll-x="true">
+    <block wx:for="{{tabs}}" wx:key="key">
+      <button class="tab {{activeTab === item.key ? 'tab-active' : ''}}" data-tab="{{item.key}}" bindtap="switchTab">{{item.label}}</button>
+    </block>
+  </scroll-view>
+
+  <view wx:if="{{activeTab === 'home'}}" class="panel">
+    <view class="eyebrow">{{text.today}}</view>
+    <view class="section-title">{{text.aiBackend}}</view>
+    <view class="status">{{apiUrl ? text.connected : text.missingUrl}}</view>
+    <view class="muted">{{apiUrl}}</view>
+    <view class="metrics">
+      <view class="metric">
+        <view class="metric-value">{{logs.length}}</view>
+        <view class="muted">{{text.logs}}</view>
+      </view>
+      <view class="metric">
+        <view class="metric-value">{{latestBody.estimatedRange || '-'}}</view>
+        <view class="muted">體脂率</view>
+      </view>
+    </view>
+    <block wx:for="{{logs}}" wx:key="id">
+      <view class="log">
+        <view class="log-title">{{item.title}}</view>
+        <view class="muted">{{item.detail}}</view>
+        <view class="time">{{item.time}}</view>
+      </view>
+    </block>
+  </view>
+
+  <view wx:if="{{activeTab === 'activity'}}" class="panel">
+    <view class="eyebrow">{{text.activity}}</view>
+    <view class="section-title">{{text.exerciseDraft}}</view>
+    <textarea class="textarea" value="{{activityText}}" data-field="activityText" bindinput="onInput" />
+    <button class="primary" bindtap="parseActivity">{{busy === 'parse' ? '...' : text.parse}}</button>
+    <button class="ghost" bindtap="analyzeExercisePhoto">{{text.analyzeExercise}}</button>
+    <view class="result">
+      <view class="log-title">{{activityDraft.displayName}}</view>
+      <view class="muted">{{text.duration}}: {{activityDraft.durationMinutes || '?'}}</view>
+      <view class="muted">{{text.intensity}}: {{activityDraft.intensity}}</view>
+      <view class="muted">{{activityDraft.confidence}}</view>
+    </view>
+    <button class="primary" bindtap="saveActivity">{{text.save}}</button>
+  </view>
+
+  <view wx:if="{{activeTab === 'diet'}}" class="panel">
+    <view class="eyebrow">{{text.photoAi}}</view>
+    <view class="section-title">{{text.diet}}</view>
+    <button class="ghost tall" bindtap="analyzeMealPhoto">{{text.analyzeMeal}}</button>
+    <input class="input" placeholder="{{text.mealNote}}" value="{{mealNote}}" data-field="mealNote" bindinput="onInput" />
+    <button class="primary" bindtap="saveMeal">{{text.save}}</button>
+    <view class="result" wx:if="{{latestMeal}}">
+      <view class="log-title">{{latestMeal.foods}}</view>
+      <view class="muted">{{latestMeal.calories || 0}} kcal · {{latestMeal.protein || 0}}g {{text.protein}}</view>
+      <view class="muted">{{latestMeal.confidence}}</view>
+    </view>
+  </view>
+
+  <view wx:if="{{activeTab === 'kitchen'}}" class="panel">
+    <view class="eyebrow">{{text.kitchen}}</view>
+    <view class="section-title">{{text.suggestMeals}}</view>
+    <button class="ghost tall" bindtap="analyzeIngredientsPhoto">{{text.analyzeIngredients}}</button>
+    <textarea class="textarea" value="{{ingredients}}" data-field="ingredients" bindinput="onInput" />
+    <button class="primary" bindtap="suggestMeals">{{text.suggestMeals}}</button>
+    <view class="result" wx:if="{{latestIngredients}}">
+      <view class="muted">{{latestIngredients.ingredients}}</view>
+      <view class="log-title">{{latestIngredients.suggestions}}</view>
+      <view class="muted">{{latestIngredients.confidence}}</view>
+    </view>
+  </view>
+
+  <view wx:if="{{activeTab === 'body'}}" class="panel">
+    <view class="eyebrow">{{text.body}}</view>
+    <view class="section-title">體脂率</view>
+    <view class="warning">{{text.bodyHelp}}</view>
+    <view class="grid">
+      <input class="input" placeholder="{{text.height}}" value="{{bodyForm.height}}" data-field="height" bindinput="onBodyInput" />
+      <input class="input" placeholder="{{text.weight}}" value="{{bodyForm.weight}}" data-field="weight" bindinput="onBodyInput" />
+    </view>
+    <view class="grid">
+      <input class="input" placeholder="{{text.age}}" value="{{bodyForm.age}}" data-field="age" bindinput="onBodyInput" />
+      <picker mode="selector" range="{{sexOptions}}" value="{{sexIndex}}" bindchange="onSexChange">
+        <view class="input">{{bodyForm.sex === 'Female' ? text.female : text.male}}</view>
+      </picker>
+    </view>
+    <button class="ghost tall" bindtap="analyzeBodyPhoto">{{text.analyzeBody}}</button>
+    <button class="primary" bindtap="estimateBody">{{text.save}}</button>
+    <view class="result" wx:if="{{latestBody}}">
+      <view class="log-title">{{latestBody.estimatedRange}}</view>
+      <view class="muted">{{latestBody.confidence}}</view>
+      <view class="muted">{{latestBody.notes}}</view>
+    </view>
+  </view>
+
+  <view wx:if="{{activeTab === 'sleep'}}" class="panel">
+    <view class="eyebrow">{{text.sleep}}</view>
+    <view class="section-title">{{text.sleep}}</view>
+    <input class="input" placeholder="{{text.sleepAt}}" value="{{sleepAt}}" data-field="sleepAt" bindinput="onInput" />
+    <input class="input" placeholder="{{text.wakeAt}}" value="{{wakeAt}}" data-field="wakeAt" bindinput="onInput" />
+    <input class="input" placeholder="{{text.sleepQuality}}" value="{{sleepQuality}}" data-field="sleepQuality" bindinput="onInput" />
+    <button class="primary" bindtap="saveSleep">{{text.save}}</button>
+  </view>
+
+  <view wx:if="{{activeTab === 'settings'}}" class="panel">
+    <view class="eyebrow">{{text.settings}}</view>
+    <view class="section-title">{{text.language}}</view>
+    <view class="button-row">
+      <button class="chip {{locale === 'zh' ? 'chip-active' : ''}}" data-locale="zh" bindtap="setLocale">繁體中文</button>
+      <button class="chip {{locale === 'en' ? 'chip-active' : ''}}" data-locale="en" bindtap="setLocale">English</button>
+    </view>
+    <input class="input" placeholder="{{text.apiUrl}}" value="{{apiUrl}}" data-field="apiUrl" bindinput="onInput" />
+    <view class="warning">{{text.calendarNote}}</view>
+
+    <view class="section-title">{{text.aiTest}}</view>
+    <view class="muted">{{text.testIntro}}</view>
+    <button class="ghost" data-example="跑步 30 分鐘 3 miles easy" bindtap="runTextTest">跑步 30 分鐘 3 miles easy</button>
+    <button class="ghost" data-example="plank 3 sets 60 sec" bindtap="runTextTest">plank 3 sets 60 sec</button>
+    <button class="ghost" data-example="深蹲 4 組 每組 10 下" bindtap="runTextTest">深蹲 4 組 每組 10 下</button>
+    <view class="button-row">
+      <button class="chip" data-mode="exercise" bindtap="runPhotoTest">{{text.activity}}</button>
+      <button class="chip" data-mode="meal" bindtap="runPhotoTest">{{text.diet}}</button>
+      <button class="chip" data-mode="ingredients" bindtap="runPhotoTest">{{text.kitchen}}</button>
+      <button class="chip" data-mode="body" bindtap="runPhotoTest">{{text.body}}</button>
+    </view>
+    <view class="pre">{{aiTestResult}}</view>
+  </view>
+</view>
