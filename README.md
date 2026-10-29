@@ -3,15 +3,17 @@
 Vital Lens is an Expo iPhone app for camera-first exercise, meals, sleep, kitchen-based meal suggestions, daily reminders, calendar events, and educational 體脂率/body-fat range tracking.
 
 <!-- BEGIN portfolio-project-animations -->
-## Animated project guide
+## Recorded project interactions
 
-These self-contained SVG animations explain the project workflow. They are illustrative guides, not recorded experiments or new performance results. Static content remains available when reduced motion is requested.
+These previews record interaction with original project figures, saved notebook outputs, source tests, or the actual project interface. They do not represent new experiments, model inference, or benchmark runs. Pointer-driven inspection, saved-result selection, and browser controls are captured below.
 
-### From draft to journal
+### Use the original web prototype
 
-![From draft to journal — illustrative animation](docs/portfolio-animations/vital-lens.svg)
+![Use the original web prototype - recorded project interaction](docs/portfolio-previews/vital-lens.gif)
 
-A conceptual app workflow with synthetic entries; no live photo analysis, health measurement or medical advice.
+The original static prototype, copied byte-for-byte. Its sample entries and simulated estimates are demo data; this does not contact the AI backend.
+
+[Original project material](https://github.com/Ztang-Yit-Xiaang/Weight-Control-and-Body-Training)
 
 <!-- END portfolio-project-animations -->
 
